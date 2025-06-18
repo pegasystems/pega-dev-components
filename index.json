@@ -2,7 +2,7 @@
     "packages": [
         {
             "name": "Blueprint Import Wizard",
-            "package": "blueprint-import",
+            "package": "platform-blueprint-component",
             "versions": [
                 {
                     "platformVersion": "23.1.0",
