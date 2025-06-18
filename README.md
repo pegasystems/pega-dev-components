@@ -1,6 +1,6 @@
-# design-components
+# PegaSystems Development Components
 
-List of components available for Pega Platform Design Time.
+This repository hosts the link to the latest version of development components used by the Pega Platform.
 
 To view the list of components: [https://pegasystems.github.io/pega-dev-components](https://pegasystems.github.io/pega-dev-components/)
 
