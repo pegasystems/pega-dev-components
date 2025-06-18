@@ -2,9 +2,9 @@
 
 List of components available for Pega Platform Design Time.
 
-To view the list of components: [https://github.com/pegasystems/pega-dev-components/design-components/](https://github.com/pegasystems/pega-dev-components)
+To view the list of components: [https://pegasystems.github.io/pega-dev-components](https://pegasystems.github.io/pega-dev-components/)
 
-For API access, use : [https://github.com/pegasystems/pega-dev-components/index.json](https://github.com/pegasystems/pega-dev-components/index.json)
+For API access, use : [https://pegasystems.github.io/pega-dev-components/index.json](https://pegasystems.github.io/pega-dev-components/index.json)
 
 ## index.json Schema
 
