@@ -11,7 +11,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/ricmars/design-components/raw/refs/heads/main/assets/blueprint-import/23.1.0/1.0.0/BPImport-231-20250212T125041_GMT.zip?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/blueprint-import/23.1.0/1.0.0/BPImport-231-20250212T125041_GMT.zip?download="
                         }
                     ],
                     "documentation": [
@@ -28,7 +28,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/ricmars/design-components/raw/refs/heads/main/assets/blueprint-import/24.1.0/1.0.1/BPImport-241-20250513T151859_GMT.zip?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/blueprint-import/24.1.0/1.0.1/BPImport-241-20250513T151859_GMT.zip?download="
                         }
                     ],
                     "documentation": [
@@ -45,7 +45,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/ricmars/design-components/raw/refs/heads/main/assets/blueprint-import/24.2.0/1.0.1/BPImport-242-20250513T151859_GMT.zip?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/blueprint-import/24.2.0/1.0.1/BPImport-242-20250513T151859_GMT.zip?download="
                         }
                     ],
                     "documentation": [
@@ -62,7 +62,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/ricmars/design-components/raw/refs/heads/main/assets/blueprint-import/25.1.0/1.0.1/BPImport-251-20250513T151859_GMT.zip?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/blueprint-import/25.1.0/1.0.1/BPImport-251-20250513T151859_GMT.zip?download="
                         }
                     ],
                     "documentation": [
@@ -142,7 +142,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/ricmars/design-components/raw/refs/heads/main/assets/constellation-modernization-assistant/1.0.8/PegaConstellationModernizationAssistant_1.0.8.zip?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/constellation-modernization-assistant/1.0.8/PegaConstellationModernizationAssistant_1.0.8.zip?download="
                         }
                     ],
                     "documentation": [
@@ -152,7 +152,7 @@
                         },
                         {
                             "name": "INSTALL_GUIDE",
-                            "url": "https://github.com/ricmars/design-components/raw/refs/heads/main/assets/constellation-modernization-assistant/1.0.8/PegaConstellationModernizationAssistant_InstallGuide_1.0.8.pdf?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/constellation-modernization-assistant/1.0.8/PegaConstellationModernizationAssistant_InstallGuide_1.0.8.pdf?download="
                         }
                     ]
                 }
