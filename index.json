@@ -7,12 +7,12 @@
             "versions": [
                 {
                     "platformVersion": "23.1.0",
-                    "latestVersion": "0.1.0",
-                    "updateDate": "2025-07-09",
+                    "latestVersion": "0.1.2",
+                    "updateDate": "2025-07-11",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.0/assets/components/platform-blueprint-component/0.1.0/blueprint-0.1.0-SNAPSHOT-bundle.jar?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
                         }
                     ],
                     "documentation": [
@@ -24,52 +24,52 @@
                 },
                 {
                     "platformVersion": "24.1.0",
-                    "latestVersion": "0.1.0",
-                    "updateDate": "2025-07-09",
+                    "latestVersion": "0.1.2",
+                    "updateDate": "2025-07-11",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.0/assets/components/platform-blueprint-component/0.1.0/blueprint-0.1.0-SNAPSHOT-bundle.jar?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
                         }
                     ],
                     "documentation": [
                         {
                             "name": "README",
-                            "url": "https://ricmars.github.io/design-components/assets/blueprint-import/24.1.0/1.0.1/README.md"
+                            "url": "https://www.pega.com/blueprint"
                         }
                     ]
                 },
                 {
                     "platformVersion": "24.2.0",
-                    "latestVersion": "0.1.0",
-                    "updateDate": "2025-07-09",
+                    "latestVersion": "0.1.2",
+                    "updateDate": "2025-07-1",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.0/assets/components/platform-blueprint-component/0.1.0/blueprint-0.1.0-SNAPSHOT-bundle.jar?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
                         }
                     ],
                     "documentation": [
                         {
                             "name": "README",
-                            "url": "https://ricmars.github.io/design-components/assets/blueprint-import/24.2.0/1.0.1/README.md"
+                            "url": "https://www.pega.com/blueprint"
                         }
                     ]
                 },
                 {
                     "platformVersion": "25.1.0",
-                    "latestVersion": "0.1.0",
+                    "latestVersion": "0.1.2",
                     "updateDate": "2025-07-09",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.0/assets/components/platform-blueprint-component/0.1.0/blueprint-0.1.0-SNAPSHOT-bundle-jakarta.jar?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle-jakarta.jar?download="
                         }
                     ],
                     "documentation": [
                         {
                             "name": "README",
-                            "url": "https://ricmars.github.io/design-components/assets/blueprint-import/25.1.0/1.0.1/README.md"
+                            "url": "https://www.pega.com/blueprint"
                         }
                     ]
                 }
