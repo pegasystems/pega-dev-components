@@ -1,17 +1,18 @@
 {
+    "version":"0.1.0",
     "packages": [
         {
-            "name": "Blueprint Import Wizard",
+            "name": "Blueprint translation module",
             "package": "platform-blueprint-component",
             "versions": [
                 {
                     "platformVersion": "23.1.0",
-                    "latestVersion": "1.0.1",
-                    "updateDate": "2025-06-13",
+                    "latestVersion": "0.1.2",
+                    "updateDate": "2025-07-11",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/blueprint-import/23.1.0/1.0.0/BPImport-231-20250212T125041_GMT.zip?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
                         }
                     ],
                     "documentation": [
@@ -23,136 +24,52 @@
                 },
                 {
                     "platformVersion": "24.1.0",
-                    "latestVersion": "1.0.1",
-                    "updateDate": "2025-06-13",
+                    "latestVersion": "0.1.2",
+                    "updateDate": "2025-07-11",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/blueprint-import/24.1.0/1.0.1/BPImport-241-20250513T151859_GMT.zip?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
                         }
                     ],
                     "documentation": [
                         {
                             "name": "README",
-                            "url": "https://ricmars.github.io/design-components/assets/blueprint-import/24.1.0/1.0.1/README.md"
+                            "url": "https://www.pega.com/blueprint"
                         }
                     ]
                 },
                 {
                     "platformVersion": "24.2.0",
-                    "latestVersion": "1.0.1",
-                    "updateDate": "2025-06-13",
+                    "latestVersion": "0.1.2",
+                    "updateDate": "2025-07-1",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/blueprint-import/24.2.0/1.0.1/BPImport-242-20250513T151859_GMT.zip?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
                         }
                     ],
                     "documentation": [
                         {
                             "name": "README",
-                            "url": "https://ricmars.github.io/design-components/assets/blueprint-import/24.2.0/1.0.1/README.md"
+                            "url": "https://www.pega.com/blueprint"
                         }
                     ]
                 },
                 {
                     "platformVersion": "25.1.0",
-                    "latestVersion": "1.0.1",
-                    "updateDate": "2025-06-13",
+                    "latestVersion": "0.1.2",
+                    "updateDate": "2025-07-09",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/blueprint-import/25.1.0/1.0.1/BPImport-251-20250513T151859_GMT.zip?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle-jakarta.jar?download="
                         }
                     ],
                     "documentation": [
                         {
                             "name": "README",
-                            "url": "https://ricmars.github.io/design-components/assets/blueprint-import/25.1.0/1.0.1/README.md"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "Constellation UI Gallery Components",
-            "package": "constellation-ui-gallery",
-            "versions": [
-                {
-                    "platformVersion": "23.1.0",
-                    "latestVersion": "1.0.10",
-                    "updateDate": "2024-08-28",
-                    "binaries": [
-                        {
-                            "name": "MAIN",
-                            "url": "https://github.com/pegasystems/constellation-ui-gallery/releases/download/1.0.10/ConstellationUIGallery_1_0_10_COMPONENTS_ONLY.zip"
-                        }
-                    ],
-                    "documentation": [
-                        {
-                            "name": "README",
-                            "url": "https://github.com/pegasystems/constellation-ui-gallery/releases/tag/1.0.10"
-                        }
-                    ]
-                },
-                {
-                    "platformVersion": "24.1.0",
-                    "latestVersion": "2.0.4",
-                    "updateDate": "2025-03-23",
-                    "binaries": [
-                        {
-                            "name": "MAIN",
-                            "url": "https://github.com/pegasystems/constellation-ui-gallery/releases/download/2.0.4/ConstellationUIGallery_2_0_4_COMPONENTS_ONLY.zip"
-                        }
-                    ],
-                    "documentation": [
-                        {
-                            "name": "README",
-                            "url": "https://github.com/pegasystems/constellation-ui-gallery/releases/tag/2.0.4"
-                        }
-                    ]
-                },
-                {
-                    "platformVersion": "24.2.0",
-                    "latestVersion": "3.0.6",
-                    "updateDate": "2025-06-01",
-                    "binaries": [
-                        {
-                            "name": "MAIN",
-                            "url": "https://github.com/pegasystems/constellation-ui-gallery/releases/download/3.0.6/ConstellationUIGallery_3_0_6_COMPONENTS_ONLY.zip"
-                        }
-                    ],
-                    "documentation": [
-                        {
-                            "name": "README",
-                            "url": "https://github.com/pegasystems/constellation-ui-gallery/releases/tag/3.0.6"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "Constellation Modernization Assistant",
-            "package": "constellation-modernization-assistant",
-            "versions": [
-                {
-                    "platformVersion": "8.7,8.8,23.1,24.1,24.2",
-                    "latestVersion": "1.0.8",
-                    "updateDate": "2025-06-12",
-                    "binaries": [
-                        {
-                            "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/constellation-modernization-assistant/1.0.8/PegaConstellationModernizationAssistant_1.0.8.zip?download="
-                        }
-                    ],
-                    "documentation": [
-                        {
-                            "name": "README",
-                            "url": "https://ricmars.github.io/design-components/assets/constellation-modernization-assistant/1.0.8/README.md"
-                        },
-                        {
-                            "name": "INSTALL_GUIDE",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/constellation-modernization-assistant/1.0.8/PegaConstellationModernizationAssistant_InstallGuide_1.0.8.pdf?download="
+                            "url": "https://www.pega.com/blueprint"
                         }
                     ]
                 }
