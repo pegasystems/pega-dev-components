@@ -12,13 +12,13 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
                         }
                     ],
                     "documentation": [
                         {
                             "name": "README",
-                            "url": "https://ricmars.github.io/design-components/assets/blueprint-import/23.1.0/1.0.1/README.md"
+                            "url": "https://www.pega.com/blueprint"
                         }
                     ]
                 },
@@ -29,7 +29,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
                         }
                     ],
                     "documentation": [
@@ -46,7 +46,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle.jar?download="
                         }
                     ],
                     "documentation": [
@@ -63,7 +63,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/bp-release/0.1.2/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle-jakarta.jar?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/main/assets/components/platform-blueprint-component/0.1.2/blueprint-0.1.2-bundle-jakarta.jar?download="
                         }
                     ],
                     "documentation": [
