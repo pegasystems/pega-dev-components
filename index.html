@@ -166,7 +166,7 @@
 
         function generateVersionRows(versions) {
             return versions.map(version => {
-                if( "23.1.0" != version ){
+                if( "23.1.0" != version.platformVersion ){
                     return ''
                 }
                 // Format date for better display
