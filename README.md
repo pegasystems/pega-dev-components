@@ -1,4 +1,4 @@
-# PegaSystems Development Components
+# Pegasystems Development Components
 
 This repository hosts the link to the latest version of development components used by the Pega Platform.
 
