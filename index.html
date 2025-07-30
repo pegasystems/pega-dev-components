@@ -149,7 +149,6 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Platform Version</th>
                                 <th>Package Version</th>
                                 <th>Last Updated</th>
                                 <th>Downloads</th>
@@ -167,6 +166,9 @@
 
         function generateVersionRows(versions) {
             return versions.map(version => {
+                if( "23.1.0" != version ){
+                    return ''
+                }
                 // Format date for better display
                 const updateDate = new Date(version.updateDate);
                 const formattedDate = updateDate.toLocaleDateString('en-US', {
@@ -177,7 +179,7 @@
                 
                 // Generate binary download links
                 const binaryLinks = version.binaries.map(binary => 
-                    `<a href="${binary.url}" target="_blank">${binary.name}</a>`
+                    `<a href="${binary.url}" target="_blank"></a>`
                 ).join('<br>');
                 
                 // Generate documentation links
@@ -187,7 +189,6 @@
                 
                 return `
                 <tr>
-                    <td>${version.platformVersion}</td>
                     <td>
                         ${version.latestVersion}
                         <span class="version-badge">Latest</span>
