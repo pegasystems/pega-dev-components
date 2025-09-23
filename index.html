@@ -149,6 +149,7 @@
                     <table>
                         <thead>
                             <tr>
+                                <th>Platform Version</th>
                                 <th>Package Version</th>
                                 <th>Last Updated</th>
                                 <th>Downloads</th>
@@ -166,9 +167,14 @@
 
         function generateVersionRows(versions) {
             return versions.map(version => {
-                if( "23.1.0" != version.platformVersion ){
+                if( version.platformVersion.startsWith("24.") ){
                     return ''
+                } else if ( version.platformVersion.startsWith("23.") ) {
+                    version.platformVersion = version.platformVersion.replace(/\.0$/, "") + " - 24.2" 
                 }
+                
+                version.platformVersion  = version.platformVersion.replace(/\.0$/, "");
+                
                 // Format date for better display
                 const updateDate = new Date(version.updateDate);
                 const formattedDate = updateDate.toLocaleDateString('en-US', {
@@ -189,6 +195,7 @@
                 
                 return `
                 <tr>
+                    <td>${version.platformVersion}</td>
                     <td>
                         ${version.latestVersion}
                         <span class="version-badge">Latest</span>
