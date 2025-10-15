@@ -1,7 +1,7 @@
 {
     "version":"0.1.0",
     "packages": [
-        {ll
+        {
             "name": "Blueprint Import Module",
             "package": "platform-blueprint-component",
             "versions": [
