@@ -74,7 +74,7 @@
                     ]
                 }
             ]
-        }
+        },
 		{
             "name": "CDH Blueprint Import Module",
             "package": "CDH-blueprint-component",
