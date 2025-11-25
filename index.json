@@ -137,7 +137,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.5/cdhblueprint-0.2.5-bundle.jar?download="
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/poc/cdh-task/assets/components/platform-blueprint-component/0.2.5/cdhblueprint-0.2.5-bundle.jar?download="
                         }
                     ],
                     "documentation": [
