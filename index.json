@@ -146,7 +146,24 @@
                             "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
                         }
                     ]
-                }
+                },
+                {
+                    "platformVersion": "26.1.0",
+                    "latestVersion": "0.2.5",
+                    "updateDate": "2025-11-12",
+                    "binaries": [
+                        {
+                            "name": "MAIN",
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/poc/cdh-task/assets/components/platform-blueprint-component/0.2.5/Rapwithsamplewhenrule.jar?download="
+                        }
+                    ],
+                    "documentation": [
+                        {
+                            "name": "README",
+                            "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
+                        }
+                    ]
+                } 
             ]
         }
     ]
