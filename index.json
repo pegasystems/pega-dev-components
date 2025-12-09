@@ -72,6 +72,23 @@
                             "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
                         }
                     ]
+                },
+                {
+                    "platformVersion": "26.1.0",
+                    "latestVersion": "0.2.6",
+                    "updateDate": "2025-11-19",
+                    "binaries": [
+                        {
+                            "name": "MAIN",
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.6/blueprint-0.2.6-bundle-jakarta.jar?download="
+                        }
+                    ],
+                    "documentation": [
+                        {
+                            "name": "README",
+                            "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
+                        }
+                    ]
                 }
             ]
         }

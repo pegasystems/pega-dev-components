@@ -167,13 +167,15 @@
 
         function generateVersionRows(versions) {
             return versions.map(version => {
-                if( version.platformVersion.startsWith("24.") ){
+                if( version.platformVersion.startsWith("24.") || version.platformVersion.startsWith("26.") ){
                     return ''
                 } else if ( version.platformVersion.startsWith("23.") ) {
                     version.platformVersion = version.platformVersion.replace(/\.0$/, "") + " - 24.2" 
+                } else if (  version.platformVersion.startsWith("25.")  ) {
+                    version.platformVersion = version.platformVersion.replace(/\.0$/, "") + " + " 
+                } else {
+                    version.platformVersion = version.platformVersion.replace(/\.0$/, "");
                 }
-                
-                version.platformVersion  = version.platformVersion.replace(/\.0$/, "");
                 
                 // Format date for better display
                 const updateDate = new Date(version.updateDate);
