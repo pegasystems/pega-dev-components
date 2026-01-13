@@ -97,9 +97,9 @@
             "package": "cdh-blueprint-component",
             "versions": [
                 {
-                    "platformVersion": "23.1.0",
-                    "latestVersion": "0.2.7",
-                    "updateDate": "2025-12-12",
+                    "platformVersion": "26.1.0",
+                    "latestVersion": "0.0.1",
+                    "updateDate": "2025-01-13",
                     "binaries": [
                         {
                             "name": "MAIN",
