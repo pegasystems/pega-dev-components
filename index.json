@@ -103,7 +103,7 @@
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/US-715057/assets/components/cdh-blueprint-component/0.0.1/CDHBlueprintComponent-0.0.1-RAP.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/cdh-blueprint-component/0.0.1/CDHBlueprintComponent-0.0.1-RAP.jar?download="
                         }
                     ],
                     "documentation": [
