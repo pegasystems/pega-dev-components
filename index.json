@@ -91,6 +91,29 @@
                     ]
                 }
             ]
-        }
-    ]
+        },  
+	{
+            "name": "CDH Blueprint Import Module",
+            "package": "cdh-blueprint-component",
+            "versions": [
+                {
+                    "platformVersion": "26.1.0",
+                    "latestVersion": "0.0.1",
+                    "updateDate": "2025-01-13",
+                    "binaries": [
+                        {
+                            "name": "MAIN",
+                            "url": "https://github.com/pegasystems/pega-dev-components/raw/refs/heads/US-715057/assets/components/cdh-blueprint-component/0.0.1/CDHBlueprintComponent-0.0.1-RAP.jar?download="
+                        }
+                    ],
+                    "documentation": [
+                        {
+                            "name": "README",
+                            "url": "https://docs.pega.com/bundle/customer-engagement-blueprint/page/customer-decision-hub/customer-engagement-blueprint/release-notes.html"
+                        }
+                    ]
+                }
+				]
+}
+]
 }
