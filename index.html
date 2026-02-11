@@ -141,6 +141,10 @@
             }
 
             packages.forEach(package => {
+                // Skip cdh-blueprint-component because its min platform version is not yet released
+                if (package.package === 'cdh-blueprint-component') {
+                    return;
+                }
                 const packageCard = document.createElement('div');
                 packageCard.className = 'card';
                 const formattedName = package.name;
