@@ -43,6 +43,24 @@ Dry-run will:
 - ✗ NOT create git branch
 - ✗ NOT push to remote
 
+### No-Commit Mode (Manual Git Push)
+
+Stage and commit changes locally, then push manually:
+
+```bash
+./blueprint_release.sh --no-commit 0.2.12 RLS-36425 2026-04-20
+```
+
+No-commit will:
+- ✓ Download files
+- ✓ Update index.json
+- ✓ Create and checkout release branch
+- ✓ Stage all changes
+- ✓ Commit with message
+- ✗ NOT push to remote (you do it manually)
+
+This is useful when you want to review or modify the commit before pushing.
+
 ## What Happens
 
 When you run a wrapper script:
@@ -174,6 +192,7 @@ If you have this set in your bash environment already, the scripts will use it a
 ## Future Enhancements
 
 - [x] Add `--dry-run` flag to preview changes without committing
+- [x] Add `--no-commit` flag to stage/commit locally without pushing
 - [ ] Add changelog generation from commit history
 - [ ] Add smoke tests for downloaded artifacts (SHA256 verification)
 - [ ] Support for multiple artifacts per platform
@@ -240,4 +259,49 @@ catalog_release manifests/blueprint.json 0.2.12 RLS-36425 2026-04-20
 # Later, disable dry-run for actual release
 export CATALOG_DRY_RUN=0
 catalog_release manifests/blueprint.json 0.2.12 RLS-36425 2026-04-20
+```
+
+## No-Commit Mode Details
+
+The `--no-commit` flag allows you to stage and commit changes locally without automatically pushing to remote.
+
+### How to Use
+
+```bash
+# Make changes locally without pushing
+./blueprint_release.sh --no-commit 0.2.12 RLS-36425 2026-04-20
+
+# Review the changes
+git log -1
+git show
+
+# Push when ready
+git push -u origin team/planetexpress/0.2.12/release
+```
+
+### Combining Flags
+
+You can combine `--dry-run` and `--no-commit`:
+
+```bash
+# Preview with no-commit mode (dry-run takes precedence)
+./blueprint_release.sh --dry-run --no-commit 0.2.12 RLS-36425 2026-04-20
+```
+
+### Using No-Commit in Scripts
+
+```bash
+#!/bin/bash
+
+# Set no-commit mode
+export CATALOG_NO_COMMIT=1
+
+# Import library
+source scripts/catalog_release_lib.sh
+
+# Run with no-commit enabled
+catalog_release manifests/blueprint.json 0.2.12 RLS-36425 2026-04-20
+
+# Then manually push when ready
+git push -u origin team/planetexpress/0.2.12/release
 ```

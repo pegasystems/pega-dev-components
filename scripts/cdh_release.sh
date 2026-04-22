@@ -2,9 +2,10 @@
 
 ################################################################################
 # CDH Component Catalog Release Wrapper
-# Usage: ./cdh_release.sh [--dry-run] <version> <work_item> <release_date>
+# Usage: ./cdh_release.sh [--dry-run] [--no-commit] <version> <work_item> <release_date>
 # Example: ./cdh_release.sh 0.0.2 RLS-36425 2026-04-17
 # Dry-run: ./cdh_release.sh --dry-run 0.0.2 RLS-36425 2026-04-17
+# No-commit: ./cdh_release.sh --no-commit 0.0.2 RLS-36425 2026-04-17
 ################################################################################
 
 set -e
@@ -13,19 +14,29 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 MANIFEST_FILE="${REPO_ROOT}/manifests/cdh.json"
 
-# Check for --dry-run flag
+# Check for --dry-run and --no-commit flags
 DRY_RUN=0
+NO_COMMIT=0
 if [ "$1" = "--dry-run" ]; then
     DRY_RUN=1
     shift  # Remove --dry-run from arguments
 fi
 
+if [ "$1" = "--no-commit" ]; then
+    NO_COMMIT=1
+    shift  # Remove --no-commit from arguments
+fi
+
 # Source the shared library
 source "${SCRIPT_DIR}/catalog_release_lib.sh"
 
-# Set environment variable for dry-run mode
+# Set environment variables for modes
 if [ $DRY_RUN -eq 1 ]; then
     export CATALOG_DRY_RUN=1
+fi
+
+if [ $NO_COMMIT -eq 1 ]; then
+    export CATALOG_NO_COMMIT=1
 fi
 
 ################################################################################
@@ -33,7 +44,7 @@ fi
 ################################################################################
 
 if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 [--dry-run] <version> <work_item> <release_date>"
+    echo "Usage: $0 [--dry-run] [--no-commit] <version> <work_item> <release_date>"
     echo ""
     echo "Arguments:"
     echo "  version       - Semantic version (e.g., 0.0.2)"
@@ -42,10 +53,12 @@ if [ "$#" -ne 3 ]; then
     echo ""
     echo "Options:"
     echo "  --dry-run     - Preview changes without committing"
+    echo "  --no-commit   - Stage and commit manually (skip auto-push)"
     echo ""
     echo "Examples:"
     echo "  $0 0.0.2 RLS-36425 2026-04-17"
     echo "  $0 --dry-run 0.0.2 RLS-36425 2026-04-17"
+    echo "  $0 --no-commit 0.0.2 RLS-36425 2026-04-17"
     echo ""
     exit 1
 fi

@@ -1,5 +1,5 @@
 {
-    "version":"0.1.0",
+    "version": "0.1.0",
     "packages": [
         {
             "name": "Blueprint Import Module",
@@ -8,7 +8,7 @@
                 {
                     "platformVersion": "23.1.0",
                     "latestVersion": "0.2.11",
-                    "updateDate": "2026-04-17",
+                    "updateDate": "2026-04-22",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -25,7 +25,7 @@
                 {
                     "platformVersion": "24.1.0",
                     "latestVersion": "0.2.11",
-                    "updateDate": "2026-04-17",
+                    "updateDate": "2026-04-22",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -42,7 +42,7 @@
                 {
                     "platformVersion": "24.2.0",
                     "latestVersion": "0.2.11",
-                    "updateDate": "2026-04-17",
+                    "updateDate": "2026-04-22",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -59,7 +59,7 @@
                 {
                     "platformVersion": "25.1.0",
                     "latestVersion": "0.2.11",
-                    "updateDate": "2026-04-17",
+                    "updateDate": "2026-04-22",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -76,7 +76,7 @@
                 {
                     "platformVersion": "26.1.0",
                     "latestVersion": "0.2.11",
-                    "updateDate": "2026-04-17",
+                    "updateDate": "2026-04-22",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -91,8 +91,8 @@
                     ]
                 }
             ]
-        },  
-	{
+        },
+        {
             "name": "CDH Blueprint Import Module",
             "package": "cdh-blueprint-component",
             "versions": [
@@ -113,7 +113,7 @@
                         }
                     ]
                 }
-				]
-}
-]
+            ]
+        }
+    ]
 }

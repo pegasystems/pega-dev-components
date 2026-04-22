@@ -39,6 +39,18 @@ function _skip_in_dry_run() {
 }
 
 ################################################################################
+# Manual Commit Configuration
+################################################################################
+
+CATALOG_NO_COMMIT="${CATALOG_NO_COMMIT:-0}"
+
+function _no_commit_msg() {
+    if [ "$CATALOG_NO_COMMIT" = "1" ]; then
+        echo "[NO-COMMIT] $@"
+    fi
+}
+
+################################################################################
 # JSON Helper (using Python)
 ################################################################################
 
@@ -362,17 +374,28 @@ function catalog_git_workflow() {
         return 1
     fi
     
-    echo "Pushing to remote..."
-    git push -u origin "$branch"
-    
-    # Generate PR URL
-    local repo_url=$(git config --get remote.origin.url | sed 's/\.git$//' | sed 's/.*://g')
-    local pr_url="https://github.com/${repo_url}/pull/new/${branch}"
-    
-    echo ""
-    echo "✓ Git workflow completed"
-    echo "PR URL: $pr_url"
-    echo ""
+    # Handle push based on CATALOG_NO_COMMIT setting
+    if [ "$CATALOG_NO_COMMIT" = "1" ]; then
+        _no_commit_msg "Skipping push to remote"
+        echo ""
+        echo "✓ Changes committed locally"
+        echo ""
+        echo "To push to remote and create a PR, run:"
+        echo "  git push -u origin $branch"
+        echo ""
+    else
+        echo "Pushing to remote..."
+        git push -u origin "$branch"
+        
+        # Generate PR URL
+        local repo_url=$(git config --get remote.origin.url | sed 's/\.git$//' | sed 's/.*://g')
+        local pr_url="https://github.com/${repo_url}/pull/new/${branch}"
+        
+        echo ""
+        echo "✓ Git workflow completed"
+        echo "PR URL: $pr_url"
+        echo ""
+    fi
     
     return 0
 }
@@ -400,14 +423,22 @@ function catalog_release() {
         dry_run_label=" [DRY-RUN]"
     fi
     
+    local no_commit_suffix=""
+    if [ "$CATALOG_NO_COMMIT" = "1" ]; then
+        no_commit_suffix=" [NO-COMMIT]"
+    fi
+    
     echo "========================================"
-    echo "Catalog Release Workflow${dry_run_label}"
+    echo "Catalog Release Workflow${dry_run_label}${no_commit_suffix}"
     echo "========================================"
     echo "Version: $version"
     echo "Work Item: $work_item"
     echo "Release Date: $update_date"
     if [ "$CATALOG_DRY_RUN" = "1" ]; then
         echo "Mode: DRY-RUN (no changes will be committed)"
+    fi
+    if [ "$CATALOG_NO_COMMIT" = "1" ]; then
+        echo "Mode: NO-COMMIT (changes committed locally, no push)"
     fi
     echo ""
     
