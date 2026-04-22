@@ -2,8 +2,9 @@
 
 ################################################################################
 # Blueprint Component Catalog Release Wrapper
-# Usage: ./blueprint_release.sh <version> <work_item> <release_date>
+# Usage: ./blueprint_release.sh [--dry-run] <version> <work_item> <release_date>
 # Example: ./blueprint_release.sh 0.2.11 RLS-36424 2026-04-17
+# Dry-run: ./blueprint_release.sh --dry-run 0.2.11 RLS-36424 2026-04-17
 ################################################################################
 
 set -e
@@ -12,23 +13,39 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 MANIFEST_FILE="${REPO_ROOT}/manifests/blueprint.json"
 
+# Check for --dry-run flag
+DRY_RUN=0
+if [ "$1" = "--dry-run" ]; then
+    DRY_RUN=1
+    shift  # Remove --dry-run from arguments
+fi
+
 # Source the shared library
 source "${SCRIPT_DIR}/catalog_release_lib.sh"
+
+# Set environment variable for dry-run mode
+if [ $DRY_RUN -eq 1 ]; then
+    export CATALOG_DRY_RUN=1
+fi
 
 ################################################################################
 # Argument Validation
 ################################################################################
 
 if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <version> <work_item> <release_date>"
+    echo "Usage: $0 [--dry-run] <version> <work_item> <release_date>"
     echo ""
     echo "Arguments:"
     echo "  version       - Semantic version (e.g., 0.2.11)"
     echo "  work_item     - Work item ID (e.g., RLS-36424)"
     echo "  release_date  - Release date in YYYY-MM-DD format (e.g., 2026-04-17)"
     echo ""
-    echo "Example:"
+    echo "Options:"
+    echo "  --dry-run     - Preview changes without committing"
+    echo ""
+    echo "Examples:"
     echo "  $0 0.2.11 RLS-36424 2026-04-17"
+    echo "  $0 --dry-run 0.2.11 RLS-36424 2026-04-17"
     echo ""
     exit 1
 fi
@@ -61,7 +78,10 @@ fi
 
 echo "BluePrint Component Catalog Release"
 echo "===================================="
-echo ""
+if [ $DRY_RUN -eq 1 ]; then
+    echo "[DRY-RUN MODE]"
+    echo ""
+fi
 
 # Check manifest exists
 if [ ! -f "$MANIFEST_FILE" ]; then
@@ -77,8 +97,13 @@ if ! catalog_release "$MANIFEST_FILE" "$VERSION" "$WORK_ITEM" "$RELEASE_DATE"; t
 fi
 
 echo ""
-echo "Next steps:"
-echo "1. Open the PR URL in your browser"
-echo "2. Review and merge the PR to 'main'"
-echo "3. GitHub Pages will deploy automatically"
+if [ $DRY_RUN -eq 0 ]; then
+    echo "Next steps:"
+    echo "1. Open the PR URL in your browser"
+    echo "2. Review and merge the PR to 'main'"
+    echo "3. GitHub Pages will deploy automatically"
+else
+    echo "To execute the actual release, run:"
+    echo "./blueprint_release.sh $VERSION $WORK_ITEM $RELEASE_DATE"
+fi
 echo ""

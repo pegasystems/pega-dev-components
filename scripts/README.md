@@ -24,6 +24,25 @@ The catalog release system consists of three layers:
 ./cdh_release.sh 0.0.2 RLS-36426 2026-04-20
 ```
 
+### Dry-Run Mode (Preview Changes)
+
+Preview a release without committing anything:
+
+```bash
+./blueprint_release.sh --dry-run 0.2.12 RLS-36425 2026-04-20
+```
+
+Dry-run will:
+- ✓ Validate manifest and inputs
+- ✓ Show what would be downloaded
+- ✓ Show what would be updated in index.json
+- ✓ Preview git branch and commit message
+- ✓ Generate preview PR URL
+- ✗ NOT download files
+- ✗ NOT modify index.json
+- ✗ NOT create git branch
+- ✗ NOT push to remote
+
 ## What Happens
 
 When you run a wrapper script:
@@ -154,9 +173,71 @@ If you have this set in your bash environment already, the scripts will use it a
 
 ## Future Enhancements
 
-- [ ] Add `--dry-run` flag to preview changes without committing
+- [x] Add `--dry-run` flag to preview changes without committing
 - [ ] Add changelog generation from commit history
 - [ ] Add smoke tests for downloaded artifacts (SHA256 verification)
 - [ ] Support for multiple artifacts per platform
 - [ ] Automated PR merge option for CI/CD pipelines
 - [ ] Rollback functionality to revert a release
+
+## Dry-Run Mode Details
+
+The `--dry-run` flag enables safe preview mode:
+
+### How to Use
+
+```bash
+# Preview a release without any side effects
+./blueprint_release.sh --dry-run 0.2.12 RLS-36425 2026-04-20
+```
+
+### What Dry-Run Does
+
+| Operation | Normal | Dry-Run |
+|-----------|--------|---------|
+| Validate manifest | ✓ | ✓ |
+| Check environment | ✓ | ✓ |
+| Download artifacts | ✓ | ✗ (shows what would be downloaded) |
+| Update index.json | ✓ | ✗ (shows what would be updated) |
+| Start HTTP server | ✓ | ✗ (shows what would be tested) |
+| Create git branch | ✓ | ✗ (shows branch name) |
+| Commit changes | ✓ | ✗ (shows commit message) |
+| Push to remote | ✓ | ✗ (shows PR URL) |
+
+### Workflow Example
+
+```bash
+# 1. Preview the release first
+./blueprint_release.sh --dry-run 0.2.12 RLS-36425 2026-04-20
+
+# Output shows what will happen...
+# [DRY-RUN] Would download assets to: ...
+# [DRY-RUN] Would update catalog with: Version: 0.2.12, Date: 2026-04-20
+# [DRY-RUN] Would create release branch: team/planetexpress/0.2.12/release
+# [DRY-RUN] Would commit with message: RLS-36425 platform-blueprint-component 0.2.12
+# Preview PR URL: https://github.com/pegasystems/pega-dev-components/pull/new/team/planetexpress/0.2.12/release
+
+# 2. Once satisfied, run the actual release
+./blueprint_release.sh 0.2.12 RLS-36425 2026-04-20
+
+# 3. Follow the next steps to merge the PR
+```
+
+### Using Dry-Run in Scripts
+
+```bash
+#!/bin/bash
+
+# Set dry-run mode
+export CATALOG_DRY_RUN=1
+
+# Import library
+source scripts/catalog_release_lib.sh
+
+# Run with dry-run enabled
+catalog_release manifests/blueprint.json 0.2.12 RLS-36425 2026-04-20
+
+# Later, disable dry-run for actual release
+export CATALOG_DRY_RUN=0
+catalog_release manifests/blueprint.json 0.2.12 RLS-36425 2026-04-20
+```

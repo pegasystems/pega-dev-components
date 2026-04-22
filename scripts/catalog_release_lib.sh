@@ -9,6 +9,36 @@
 set -e
 
 ################################################################################
+# Dry-Run Configuration
+################################################################################
+
+CATALOG_DRY_RUN="${CATALOG_DRY_RUN:-0}"
+
+function _dry_run_msg() {
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        echo "[DRY-RUN] $@"
+    fi
+}
+
+function _run_cmd() {
+    local cmd="$1"
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        _dry_run_msg "Would execute: $cmd"
+        return 0
+    else
+        eval "$cmd"
+    fi
+}
+
+function _skip_in_dry_run() {
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        _dry_run_msg "Skipping: $1"
+        return 0
+    fi
+    return 1
+}
+
+################################################################################
 # JSON Helper (using Python)
 ################################################################################
 
@@ -109,7 +139,12 @@ PYEOF
     local target_dir="${repo_root}/${asset_path//\{PACKAGE\}/$package}"
     target_dir="${target_dir//\{VERSION\}/$version}"
     
-    mkdir -p "$target_dir"
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        _dry_run_msg "Would download assets to: $target_dir"
+    else
+        mkdir -p "$target_dir"
+    fi
+    
     echo "Downloading assets to: $target_dir"
     
     # Download each artifact file
@@ -121,15 +156,19 @@ PYEOF
         
         echo "  Downloading: $filename"
         
-        response=$(curl -H "X-JFrog-Art-Api: $token" -s -w "%{http_code}" -o "$tempfile" "$url" 2>&1)
-        
-        if [ "$response" = "200" ]; then
-            mv "$tempfile" "$target_file"
-            echo "    ✓ $url"
+        if [ "$CATALOG_DRY_RUN" = "1" ]; then
+            _dry_run_msg "Would download: $url → $target_file"
         else
-            echo "    ✗ Failed (HTTP $response): $url"
-            rm -f "$tempfile"
-            return 1
+            response=$(curl -H "X-JFrog-Art-Api: $token" -s -w "%{http_code}" -o "$tempfile" "$url" 2>&1)
+            
+            if [ "$response" = "200" ]; then
+                mv "$tempfile" "$target_file"
+                echo "    ✓ $url"
+            else
+                echo "    ✗ Failed (HTTP $response): $url"
+                rm -f "$tempfile"
+                return 1
+            fi
         fi
     done
     
@@ -164,13 +203,25 @@ function catalog_update_json() {
     
     # Create a temporary backup
     local backup_file="${index_file}.backup"
-    cp "$index_file" "$backup_file"
+    
+    if ! _skip_in_dry_run "Creating backup"; then
+        cp "$index_file" "$backup_file"
+    fi
     
     # Read platforms from manifest
     local platforms=$(python3 -c "import json; data=json.load(open('$manifest_file')); [print(p) for p in data['platforms']]")
     
     # Update using Python script
-    python3 << PYEOF
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        _dry_run_msg "Would update catalog with:"
+        _dry_run_msg "  Version: $version"
+        _dry_run_msg "  Date: $update_date"
+        _dry_run_msg "  Platforms:"
+        echo "$platforms" | while read -r p; do
+            [ -n "$p" ] && _dry_run_msg "    - $p"
+        done
+    else
+        python3 << PYEOF
 import json
 import re
 
@@ -203,6 +254,7 @@ for pkg in catalog['packages']:
 with open('$index_file', 'w') as f:
     json.dump(catalog, f, indent=4)
 PYEOF
+    fi
     
     echo "✓ Catalog updated successfully"
     return 0
@@ -220,6 +272,13 @@ function catalog_verify_render() {
     if [ -z "$repo_root" ] || [ -z "$version" ]; then
         echo "Usage: catalog_verify_render <repo_root> <version> [port]"
         return 1
+    fi
+    
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        _dry_run_msg "Would start HTTP server on port $port and verify version $version"
+        _dry_run_msg "Would test catalog API for: \"latestVersion\": \"$version\""
+        echo "✓ Catalog verification skipped (dry-run mode)"
+        return 0
     fi
     
     echo "Starting HTTP server on port $port..."
@@ -254,20 +313,39 @@ function catalog_git_workflow() {
     local repo_root="$1"
     local version="$2"
     local work_item="$3"
-    local branch_template="$4"
-    local commit_template="$5"
+    local package="$4"
+    local branch_template="$5"
+    local commit_template="$6"
     
-    if [ -z "$repo_root" ] || [ -z "$version" ] || [ -z "$work_item" ] || [ -z "$branch_template" ] || [ -z "$commit_template" ]; then
-        echo "Usage: catalog_git_workflow <repo_root> <version> <work_item> <branch_template> <commit_template>"
+    if [ -z "$repo_root" ] || [ -z "$version" ] || [ -z "$work_item" ] || [ -z "$package" ] || [ -z "$branch_template" ] || [ -z "$commit_template" ]; then
+        echo "Usage: catalog_git_workflow <repo_root> <version> <work_item> <package> <branch_template> <commit_template>"
         return 1
     fi
     
     cd "$repo_root"
     
     # Construct branch name and commit message
-    local branch="${branch_template//{VERSION}/$version}"
-    local commit_msg="${commit_template//{VERSION}/$version}"
-    commit_msg="${commit_msg//{WORK_ITEM}/$work_item}"
+    local branch="${branch_template//\{VERSION\}/$version}"
+    local commit_msg="${commit_template//\{VERSION\}/$version}"
+    commit_msg="${commit_msg//\{WORK_ITEM\}/$work_item}"
+    commit_msg="${commit_msg//\{PACKAGE\}/$package}"
+    
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        _dry_run_msg "Would create release branch: $branch"
+        _dry_run_msg "Would stage all changes"
+        _dry_run_msg "Would commit with message: $commit_msg"
+        _dry_run_msg "Would push to remote: origin/$branch"
+        
+        # Generate PR URL for preview
+        local repo_url=$(git config --get remote.origin.url | sed 's/\.git$//' | sed 's/.*://g')
+        local pr_url="https://github.com/${repo_url}/pull/new/${branch}"
+        
+        echo ""
+        echo "✓ Git workflow preview complete"
+        echo "Preview PR URL: $pr_url"
+        echo ""
+        return 0
+    fi
     
     echo "Creating release branch: $branch"
     git checkout -b "$branch" || { echo "ERROR: Failed to create branch"; return 1; }
@@ -317,12 +395,20 @@ function catalog_release() {
         return 1
     fi
     
+    local dry_run_label=""
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        dry_run_label=" [DRY-RUN]"
+    fi
+    
     echo "========================================"
-    echo "Catalog Release Workflow"
+    echo "Catalog Release Workflow${dry_run_label}"
     echo "========================================"
     echo "Version: $version"
     echo "Work Item: $work_item"
     echo "Release Date: $update_date"
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        echo "Mode: DRY-RUN (no changes will be committed)"
+    fi
     echo ""
     
     catalog_validate_manifest "$manifest_file" || return 1
@@ -335,16 +421,20 @@ function catalog_release() {
     echo ""
     
     local repo_root=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['repo_root'])")
-    catalog_verify_render "$repo_root" "$version" || return 1
-    echo ""
-    
+    local package=$(python3 -c "import json; print(json.load(open('$manifest_file'))['package'])")
     local branch_template=$(python3 -c "import json; print(json.load(open('$manifest_file'))['release']['branch_template'])")
     local commit_template=$(python3 -c "import json; print(json.load(open('$manifest_file'))['release']['commit_message_template'])")
     
-    catalog_git_workflow "$repo_root" "$version" "$work_item" "$branch_template" "$commit_template" || return 1
+    catalog_git_workflow "$repo_root" "$version" "$work_item" "$package" "$branch_template" "$commit_template" || return 1
     
     echo "========================================"
-    echo "✓ Release workflow completed successfully!"
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        echo "✓ Dry-run completed successfully!"
+        echo "To execute the actual release, run:"
+        echo "  CATALOG_DRY_RUN=0 catalog_release $manifest_file $version $work_item $update_date"
+    else
+        echo "✓ Release workflow completed successfully!"
+    fi
     echo "========================================"
     
     return 0
