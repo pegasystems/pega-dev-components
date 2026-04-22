@@ -365,6 +365,19 @@ function catalog_git_workflow() {
     echo "Staging changes..."
     git add -A
     
+    # Handle no-commit mode - skip commit and push
+    if [ "$CATALOG_NO_COMMIT" = "1" ]; then
+        _no_commit_msg "Skipping commit and push"
+        echo ""
+        echo "✓ Changes staged locally in branch: $branch"
+        echo ""
+        echo "To commit and push, run:"
+        echo "  git commit -m '$commit_msg'"
+        echo "  git push -u origin $branch"
+        echo ""
+        return 0
+    fi
+    
     # Check if there are changes to commit
     if ! git diff --cached --quiet; then
         echo "Committing: $commit_msg"
@@ -374,28 +387,17 @@ function catalog_git_workflow() {
         return 1
     fi
     
-    # Handle push based on CATALOG_NO_COMMIT setting
-    if [ "$CATALOG_NO_COMMIT" = "1" ]; then
-        _no_commit_msg "Skipping push to remote"
-        echo ""
-        echo "✓ Changes committed locally"
-        echo ""
-        echo "To push to remote and create a PR, run:"
-        echo "  git push -u origin $branch"
-        echo ""
-    else
-        echo "Pushing to remote..."
-        git push -u origin "$branch"
-        
-        # Generate PR URL
-        local repo_url=$(git config --get remote.origin.url | sed 's/\.git$//' | sed 's/.*://g')
-        local pr_url="https://github.com/${repo_url}/pull/new/${branch}"
-        
-        echo ""
-        echo "✓ Git workflow completed"
-        echo "PR URL: $pr_url"
-        echo ""
-    fi
+    echo "Pushing to remote..."
+    git push -u origin "$branch"
+    
+    # Generate PR URL
+    local repo_url=$(git config --get remote.origin.url | sed 's/\.git$//' | sed 's/.*://g')
+    local pr_url="https://github.com/${repo_url}/pull/new/${branch}"
+    
+    echo ""
+    echo "✓ Git workflow completed"
+    echo "PR URL: $pr_url"
+    echo ""
     
     return 0
 }
@@ -438,7 +440,7 @@ function catalog_release() {
         echo "Mode: DRY-RUN (no changes will be committed)"
     fi
     if [ "$CATALOG_NO_COMMIT" = "1" ]; then
-        echo "Mode: NO-COMMIT (changes committed locally, no push)"
+        echo "Mode: NO-COMMIT (changes staged locally, no commit/push)"
     fi
     echo ""
     
