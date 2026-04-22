@@ -1,0 +1,40 @@
+{
+  "app_name": "blueprint",
+  "package": "platform-blueprint-component",
+  "platforms": [
+    "23.1.0",
+    "24.1.0",
+    "24.2.0",
+    "25.1.0",
+    "26.1.0"
+  ],
+  "artifacts": {
+    "base_url": "https://bin.pega.io/artifactory/repo2/com/pega/infinity/component/blueprint/x.x.x/",
+    "files": [
+      {
+        "name": "blueprint-x.x.x-bundle.jar",
+        "platforms": [
+          "23.1.0",
+          "24.1.0",
+          "24.2.0"
+        ]
+      },
+      {
+        "name": "blueprint-x.x.x-bundle-jakarta.jar",
+        "platforms": [
+          "25.1.0",
+          "26.1.0"
+        ]
+      }
+    ]
+  },
+  "catalog": {
+    "repo_root": "/home/sartm/code/component-catalog/pega-dev-components",
+    "index_file": "index.json",
+    "asset_path_template": "assets/components/{PACKAGE}/{VERSION}/"
+  },
+  "release": {
+    "branch_template": "team/planetexpress/{VERSION}/release",
+    "commit_message_template": "{WORK_ITEM} {PACKAGE} {VERSION}"
+  }
+}

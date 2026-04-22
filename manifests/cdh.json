@@ -1,0 +1,33 @@
+{
+  "app_name": "cdh",
+  "package": "cdh-blueprint-component",
+  "platforms": [
+    "26.1.0"
+  ],
+  "artifacts": {
+    "base_url": "https://bin.pega.io/artifactory/repo2/com/pega/infinity/component/cdh/x.x.x/",
+    "files": [
+      {
+        "name": "CDHBlueprintComponent-x.x.x-RAP.jar",
+        "platforms": [
+          "26.1.0"
+        ]
+      },
+      {
+        "name": "CDHBlueprintComponent-x.x.x-RAP.zip",
+        "platforms": [
+          "26.1.0"
+        ]
+      }
+    ]
+  },
+  "catalog": {
+    "repo_root": "/home/sartm/code/component-catalog/pega-dev-components",
+    "index_file": "index.json",
+    "asset_path_template": "assets/components/{PACKAGE}/{VERSION}/"
+  },
+  "release": {
+    "branch_template": "team/planetexpress/{VERSION}/release",
+    "commit_message_template": "{WORK_ITEM} {PACKAGE} {VERSION}"
+  }
+}
