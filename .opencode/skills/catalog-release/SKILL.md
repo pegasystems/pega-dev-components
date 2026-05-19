@@ -4,6 +4,9 @@ description: Release components to the Pega Dev Components catalog. Use when the
 metadata:
   audience: personal
   workflow: release
+tools:
+  - bash
+  - read
 ---
 
 # Catalog Release Skill
