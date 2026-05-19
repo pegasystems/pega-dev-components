@@ -43,6 +43,35 @@ Dry-run will:
 - ✗ NOT create git branch
 - ✗ NOT push to remote
 
+### Verify a Release
+
+After running a release, validate that the catalog is correct:
+
+```bash
+source scripts/catalog_release_lib.sh
+catalog_verify_render "$(pwd)" "0.2.13"
+```
+
+Or validate URLs have correct filenames:
+
+```bash
+python3 -c "
+import json
+with open('index.json') as f:
+    data = json.load(f)
+
+pkg = [p for p in data['packages'] if p['package'] == 'platform-blueprint-component'][0]
+
+print('URL Validation for platform-blueprint-component:')
+for v in pkg['versions']:
+    url = v['binaries'][0]['url']
+    version = v['latestVersion']
+    filename_ok = f'-{version}-' in url
+    path_ok = f'/{version}/' in url
+    status = '✓' if (filename_ok and path_ok) else '✗'
+    print(f\"{status} {v['platformVersion']}: {url.split('/')[-1].replace('?download=', '')}\")"
+```
+
 ### No-Commit Mode (Manual Git Push)
 
 Stage and commit changes locally, then push manually:
@@ -67,10 +96,32 @@ When you run a wrapper script:
 
 1. ✓ **Validate** manifest and environment (checks `artifactory_key`)
 2. ✓ **Download** binaries from Artifactory with version substitution
-3. ✓ **Update** `index.json` with new version, date, and URLs
+3. ✓ **Update** `index.json` with new version, date, and URLs (both path and filename)
 4. ✓ **Verify** the catalog renders correctly (HTTP server test)
 5. ✓ **Git** workflow: branch, stage, commit, push
 6. ✓ **Output** PR URL for final merge
+
+### Post-Release Verification
+
+After the script completes, you can manually verify:
+
+```bash
+# Verify version appears in catalog
+source scripts/catalog_release_lib.sh
+catalog_verify_render "$(pwd)" "<version>"
+
+# Verify URLs have correct filenames
+python3 -c "
+import json
+with open('index.json') as f:
+    data = json.load(f)
+pkg = [p for p in data['packages'] if p['package'] == '<package-name>'][0]
+for v in pkg['versions']:
+    url = v['binaries'][0]['url']
+    version = v['latestVersion']
+    ok = f'-{version}-' in url and f'/{version}/' in url
+    print(f\"{'✓' if ok else '✗'} {v['platformVersion']}: {url.split('/')[-1]}\")"
+```
 
 ## Adding a New Catalog
 
