@@ -195,9 +195,11 @@
                 ).join('<br>');
                 
                 // Generate documentation links
-                const docLinks = version.documentation.map(doc => 
-                    `<a href="${doc.url}" target="_blank">${doc.name}</a>`
-                ).join('<br>');
+                const docLinks = (version.documentation && version.documentation.length > 0)
+                    ? version.documentation.map(doc => 
+                        `<a href="${doc.url}" target="_blank">${doc.name}</a>`
+                    ).join('<br>')
+                    : '';
                 
                 return `
                 <tr>
