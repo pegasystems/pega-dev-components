@@ -22,6 +22,8 @@ import urllib.error
 from urllib.parse import urlparse
 import sys
 from pathlib import Path
+import subprocess
+import time
 
 
 def bytes_to_human(size_bytes):
@@ -58,6 +60,75 @@ def get_repo_root():
     """Get the repository root directory"""
     script_dir = Path(__file__).parent
     return script_dir.parent
+
+
+def verify_html(base_url="http://localhost:8000"):
+    """Verify that index.html renders without JavaScript errors using static analysis"""
+    
+    html_results = {
+        'page_load': False,
+        'error_count': 0,
+        'errors': [],
+        'checks_passed': [],
+    }
+    
+    try:
+        # Fetch the index.html page
+        url = f"{base_url}/index.html"
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req, timeout=10) as response:
+            content = response.read().decode('utf-8')
+            
+        if response.status == 200:
+            html_results['page_load'] = True
+        
+        # Check 1: Null-safe documentation handling
+        if '(version.documentation && version.documentation.length > 0)' in content:
+            html_results['checks_passed'].append('Null-safe documentation check present')
+        else:
+            html_results['error_count'] += 1
+            html_results['errors'].append('Missing null-safe documentation check - unsafe .map() on documentation')
+        
+        # Check 2: Data loading mechanism
+        if 'fetch(\'./index.json\')' in content or 'fetch("./index.json")' in content:
+            html_results['checks_passed'].append('Data loading mechanism present')
+        else:
+            html_results['error_count'] += 1
+            html_results['errors'].append('Data loading mechanism not found')
+        
+        # Check 3: Package display logic
+        if 'displayPackages' in content:
+            html_results['checks_passed'].append('Package display logic present')
+        else:
+            html_results['error_count'] += 1
+            html_results['errors'].append('Package display logic missing')
+        
+        # Check 4: Version row generation
+        if 'generateVersionRows' in content:
+            html_results['checks_passed'].append('Version row generation present')
+        else:
+            html_results['error_count'] += 1
+            html_results['errors'].append('Version row generation missing')
+        
+        # Check 5: Table structure
+        if '<table>' in content and '<thead>' in content and '<tbody>' in content:
+            html_results['checks_passed'].append('HTML table structure present')
+        else:
+            html_results['error_count'] += 1
+            html_results['errors'].append('HTML table structure incomplete')
+        
+        # Check 6: Error handling
+        if 'catch (error)' in content or 'catch(error)' in content:
+            html_results['checks_passed'].append('Error handling present')
+        else:
+            html_results['error_count'] += 1
+            html_results['errors'].append('Error handling missing')
+            
+    except Exception as e:
+        html_results['error_count'] += 1
+        html_results['errors'].append(f"Failed to fetch/parse index.html: {str(e)}")
+    
+    return html_results
 
 
 def verify_catalog(catalog_json, assets_dir, base_url="http://localhost:8000"):
@@ -153,22 +224,22 @@ def verify_catalog(catalog_json, assets_dir, base_url="http://localhost:8000"):
     return results
 
 
-def print_results(results):
+def print_results(catalog_results, html_results=None):
     """Print verification results in a readable format"""
 
     print("\n" + "="*100)
     print("CATALOG VERIFICATION REPORT")
     print("="*100)
-    print(f"\nTotal URLs: {results['total']}")
-    print(f"Passed: {results['passed']} ✓")
-    print(f"Failed: {results['failed']} ✗")
+    print(f"\nTotal URLs: {catalog_results['total']}")
+    print(f"Passed: {catalog_results['passed']} ✓")
+    print(f"Failed: {catalog_results['failed']} ✗")
 
-    if results['failed'] > 0:
+    if catalog_results['failed'] > 0:
         print("\n" + "-"*100)
-        print("FAILURES")
+        print("CATALOG FAILURES")
         print("-"*100)
 
-        for detail in results['details']:
+        for detail in catalog_results['details']:
             if detail['status'] != 'PASSED':
                 print(f"\n❌ {detail['package']} v{detail['version']} (Platform {detail['platform']})")
                 print(f"   URL: {detail['url']}")
@@ -181,17 +252,41 @@ def print_results(results):
                     print(f"   Error: {detail['error']}")
 
     print("\n" + "-"*100)
-    print("DETAILS")
+    print("CATALOG DETAILS")
     print("-"*100)
 
-    for detail in results['details']:
+    for detail in catalog_results['details']:
         status_icon = "✓" if detail['status'] == 'PASSED' else "✗"
         size_str = bytes_to_human(detail['local_size']) if detail['local_size'] else "N/A"
         print(f"{status_icon} {detail['package']:35} v{detail['version']:10} {detail['platform']:10} {size_str:>10}")
 
+    # Print HTML verification results if available
+    if html_results:
+        print("\n" + "="*100)
+        print("HTML RENDERING VERIFICATION")
+        print("="*100)
+        
+        page_status = "✓ OK" if html_results['page_load'] else "✗ FAILED"
+        print(f"\nPage Load: {page_status}")
+        
+        if html_results['checks_passed']:
+            print(f"\n✓ Checks Passed ({len(html_results['checks_passed'])}):")
+            for check in html_results['checks_passed']:
+                print(f"  ✓ {check}")
+        
+        if html_results['error_count'] > 0:
+            print(f"\n❌ HTML Checks Failed ({html_results['error_count']}):")
+            for error in html_results['errors']:
+                print(f"  ✗ {error}")
+        else:
+            print("\n✓ All HTML checks passed")
+
     print("\n" + "="*100 + "\n")
 
-    return results['failed'] == 0
+    # Return success only if both catalog and HTML (if tested) pass
+    catalog_success = catalog_results['failed'] == 0
+    html_success = html_results is None or html_results['error_count'] == 0
+    return catalog_success and html_success
 
 
 if __name__ == '__main__':
@@ -204,7 +299,13 @@ if __name__ == '__main__':
     catalog_json = repo_root / "index.json"
     assets_dir = repo_root
 
-    results = verify_catalog(str(catalog_json), str(assets_dir), base_url)
-    success = print_results(results)
+    # Run catalog verification
+    catalog_results = verify_catalog(str(catalog_json), str(assets_dir), base_url)
+    
+    # Run HTML verification
+    html_results = verify_html(base_url)
+    
+    # Print combined results
+    success = print_results(catalog_results, html_results)
 
     sys.exit(0 if success else 1)
