@@ -93,6 +93,56 @@
             ]
         },
         {
+            "name": "AI Authoring Rules",
+            "package": "ai-authoring-rules",
+            "versions": [
+                {
+                    "platformVersion": "24.1.0",
+                    "latestVersion": "0.0.19",
+                    "updateDate": "2026-05-27",
+                    "binaries": [
+                        {
+                            "name": "MAIN",
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/0.0.19/genai-0.0.19-bundle-24.1.jar?download="
+                        }
+                    ]
+                },
+                {
+                    "platformVersion": "24.2.0",
+                    "latestVersion": "0.0.19",
+                    "updateDate": "2026-05-27",
+                    "binaries": [
+                        {
+                            "name": "MAIN",
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/0.0.19/genai-0.0.19-bundle-24.2.jar?download="
+                        }
+                    ]
+                },
+                {
+                    "platformVersion": "25.1.0",
+                    "latestVersion": "0.0.19",
+                    "updateDate": "2026-05-27",
+                    "binaries": [
+                        {
+                            "name": "MAIN",
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/0.0.19/genai-0.0.19-bundle-25.1.jar?download="
+                        }
+                    ]
+                },
+                {
+                    "platformVersion": "26.1.0",
+                    "latestVersion": "0.0.19",
+                    "updateDate": "2026-05-27",
+                    "binaries": [
+                        {
+                            "name": "MAIN",
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/0.0.19/genai-0.0.19-bundle-26.1.jar?download="
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "CDH Blueprint Import Module",
             "package": "cdh-blueprint-component",
             "versions": [

@@ -170,40 +170,89 @@
         }
 
         function generateVersionRows(versions) {
-            return versions.map(version => {
-                if( version.platformVersion.startsWith("24.") || version.platformVersion.startsWith("26.") ){
-                    return ''
-                } else if ( version.platformVersion.startsWith("23.") ) {
-                    version.platformVersion = version.platformVersion.replace(/\.0$/, "") + " - 24.2" 
-                } else if (  version.platformVersion.startsWith("25.")  ) {
-                    version.platformVersion = version.platformVersion.replace(/\.0$/, "") + " + " 
+            // Group consecutive versions by their binary set
+            const groups = [];
+            let currentGroup = null;
+            
+            for (const version of versions) {
+                // Create a signature of the binaries for this version
+                const binarySignature = version.binaries.map(b => {
+                    // Extract the filename (last part after /)
+                    const filename = b.url.split('/').pop().split('?')[0];
+                    return filename;
+                }).sort().join('|');
+                
+                // If this version has the same binaries as the previous, group them
+                if (currentGroup && currentGroup.binarySignature === binarySignature) {
+                    currentGroup.versions.push(version);
                 } else {
-                    version.platformVersion = version.platformVersion.replace(/\.0$/, "");
+                    // Start a new group
+                    if (currentGroup) {
+                        groups.push(currentGroup);
+                    }
+                    currentGroup = {
+                        binarySignature,
+                        versions: [version]
+                    };
+                }
+            }
+            
+            // Don't forget the last group
+            if (currentGroup) {
+                groups.push(currentGroup);
+            }
+            
+            // Now generate table rows from groups
+            return groups.map(group => {
+                const versions_in_group = group.versions;
+                const firstVersion = versions_in_group[0];
+                const lastVersion = versions_in_group[versions_in_group.length - 1];
+                
+                // Format platform version display
+                let displayPlatform;
+                if (versions_in_group.length === 1) {
+                    // Single version in group - show as-is
+                    displayPlatform = firstVersion.platformVersion.replace(/\.0$/, "");
+                } else {
+                    // Multiple versions in group - show range
+                    const first = firstVersion.platformVersion.replace(/\.0$/, "");
+                    const last = lastVersion.platformVersion.replace(/\.0$/, "");
+                    
+                    // If last is just an increment of first, use + notation
+                    const firstNum = parseFloat(first);
+                    const lastNum = parseFloat(last);
+                    if (lastNum - firstNum === 1 || (lastNum === firstNum + 0.1 && last.includes('.'))) {
+                        displayPlatform = `${first} +`;
+                    } else {
+                        displayPlatform = `${first} - ${last}`;
+                    }
                 }
                 
                 // Format date for better display
-                const updateDate = new Date(version.updateDate);
+                const updateDate = new Date(firstVersion.updateDate);
                 const formattedDate = updateDate.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 });
                 
-                // Generate binary download links
-                const binaryLinks = version.binaries.map(binary => 
+                // Generate binary download links (use first version in group)
+                const binaryLinks = firstVersion.binaries.map(binary => 
                     `<a href="${binary.url}" target="_blank">download</a>`
                 ).join('<br>');
                 
                 // Generate documentation links
-                const docLinks = version.documentation.map(doc => 
-                    `<a href="${doc.url}" target="_blank">${doc.name}</a>`
-                ).join('<br>');
+                const docLinks = (firstVersion.documentation && firstVersion.documentation.length > 0)
+                    ? firstVersion.documentation.map(doc => 
+                        `<a href="${doc.url}" target="_blank">${doc.name}</a>`
+                    ).join('<br>')
+                    : '';
                 
                 return `
                 <tr>
-                    <td>${version.platformVersion}</td>
+                    <td>${displayPlatform}</td>
                     <td>
-                        ${version.latestVersion}
+                        ${firstVersion.latestVersion}
                         <span class="version-badge">Latest</span>
                     </td>
                     <td class="update-date">${formattedDate}</td>
