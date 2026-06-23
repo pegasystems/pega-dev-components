@@ -29,7 +29,7 @@
     ]
   },
   "catalog": {
-    "repo_root": "/home/sartm/code/component-catalog/pega-dev-components",
+    "repo_root": "/home/areks1/GitHubRepos/pega-dev-components",
     "index_file": "index.json",
     "asset_path_template": "assets/components/{PACKAGE}/{VERSION}/"
   },
