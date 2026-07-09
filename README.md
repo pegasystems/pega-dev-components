@@ -50,4 +50,23 @@ The [index.json](https://github.com/pegasystems/pega-dev-components/index.json) 
 }
 ```
 
+### AI Authoring Rules (`ai-authoring-rules`) — split version fields
+
+The `ai-authoring-rules` package tracks each sub-component independently instead of using the shared `latestVersion` field. Its version entries use:
+
+```json
+{
+  "platformVersion": "xx.x.x",
+  "latestRulesVersion": "x.x.x",      // GenAI rules bundle version (primary artifact)
+  "latestSkillVersion": "x.x.x",      // Skill component version
+  "latestMcpVersion": "x.x.x",        // MCP component version
+  "latestAutopilotVersion": "x.x.x",  // Autopilot component version
+  "isAutopilotDependent": false,       // true when this release requires an Autopilot update
+  "updateDate": "YYYY-MM-DD",
+  "binaries": [ ... ]
+}
+```
+
+Use `genai_release.sh` to release this component — it accepts per-sub-component version flags and manages `isAutopilotDependent` automatically.
+
 Each package can have multiple versions supporting different Pega Platform releases, with their respective binaries and documentation links.

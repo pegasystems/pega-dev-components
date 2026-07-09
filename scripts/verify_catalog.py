@@ -149,7 +149,11 @@ def verify_catalog(catalog_json, assets_dir, base_url="http://localhost:8000"):
 
         for version_info in package['versions']:
             platform_version = version_info['platformVersion']
-            component_version = version_info['latestVersion']
+            # ai-authoring-rules uses split version fields instead of latestVersion
+            component_version = (
+                version_info.get('latestVersion') or
+                version_info.get('latestRulesVersion')
+            )
 
             for binary in version_info.get('binaries', []):
                 results['total'] += 1

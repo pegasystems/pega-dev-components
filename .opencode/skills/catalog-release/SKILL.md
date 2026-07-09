@@ -66,7 +66,7 @@ Trigger: "release blueprint 0.2.13", "publish CDH 0.0.2", "deploy blueprint"
    pkg = [p for p in data['packages'] if p['package'] == '<package>'][0]
    for v in pkg['versions']:
        url = v['binaries'][0]['url']
-       version = v['latestVersion']
+       version = v.get('latestVersion') or v.get('latestRulesVersion')
        ok = f'-{version}-' in url and f'/{version}/' in url
        print(f\"{'✓' if ok else '✗'} {v['platformVersion']}: {url.split('/')[-1]}\")"
    ```
@@ -99,7 +99,7 @@ Trigger: "verify release", "validate catalog", "check release"
    pkg = [p for p in data['packages'] if p['package'] == '<package>'][0]
    for v in pkg['versions']:
        url = v['binaries'][0]['url']
-       version = v['latestVersion']
+       version = v.get('latestVersion') or v.get('latestRulesVersion')
        filename_ok = f'-{version}-' in url
        path_ok = f'/{version}/' in url
        status = '✓' if (filename_ok and path_ok) else '✗'
@@ -139,7 +139,8 @@ with open('index.json') as f:
 for pkg in data['packages']:
     print(f\"\n{pkg['package']}:\")
     for v in pkg['versions']:
-        print(f\"  {v['platformVersion']}: {v['latestVersion']} ({v['updateDate']})\")"
+        version = v.get('latestVersion') or v.get('latestRulesVersion')
+        print(f\"  {v['platformVersion']}: {version} ({v['updateDate']})\")"
 ```
 
 ---

@@ -97,19 +97,12 @@
             "package": "ai-authoring-rules",
             "versions": [
                 {
-                    "platformVersion": "24.1.0",
-                    "latestVersion": "0.0.23",
-                    "updateDate": "2026-07-01",
-                    "binaries": [
-                        {
-                            "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/0.0.23/genai-0.0.23-bundle-24.1.jar?download="
-                        }
-                    ]
-                },
-                {
                     "platformVersion": "24.2.0",
-                    "latestVersion": "0.0.23",
+                    "latestRulesVersion": "0.0.23",
+                    "latestSkillVersion": "0.0.23",
+                    "latestMcpVersion": "0.0.23",
+                    "latestAutopilotVersion": "0.0.23",
+                    "isAutopilotDependent": false,
                     "updateDate": "2026-07-01",
                     "binaries": [
                         {
@@ -120,7 +113,11 @@
                 },
                 {
                     "platformVersion": "25.1.0",
-                    "latestVersion": "0.0.23",
+                    "latestRulesVersion": "0.0.23",
+                    "latestSkillVersion": "0.0.23",
+                    "latestMcpVersion": "0.0.23",
+                    "latestAutopilotVersion": "0.0.23",
+                    "isAutopilotDependent": false,
                     "updateDate": "2026-07-01",
                     "binaries": [
                         {
@@ -131,7 +128,11 @@
                 },
                 {
                     "platformVersion": "26.1.0",
-                    "latestVersion": "0.0.23",
+                    "latestRulesVersion": "0.0.23",
+                    "latestSkillVersion": "0.0.23",
+                    "latestMcpVersion": "0.0.23",
+                    "latestAutopilotVersion": "0.0.23",
+                    "isAutopilotDependent": false,
                     "updateDate": "2026-07-01",
                     "binaries": [
                         {

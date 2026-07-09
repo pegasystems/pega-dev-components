@@ -2,7 +2,6 @@
   "app_name": "genai",
   "package": "ai-authoring-rules",
   "platforms": [
-    "24.1.0",
     "24.2.0",
     "25.1.0",
     "26.1.0"
@@ -10,12 +9,6 @@
   "artifacts": {
     "base_url": "https://bin.pega.io/artifactory/repo2/com/pega/infinity/component/genai/x.x.x/",
     "files": [
-      {
-        "name": "genai-x.x.x-bundle-24.1.jar",
-        "platforms": [
-          "24.1.0"
-        ]
-      },
       {
         "name": "genai-x.x.x-bundle-24.2.jar",
         "platforms": [

@@ -118,7 +118,7 @@ with open('index.json') as f:
 pkg = [p for p in data['packages'] if p['package'] == '<package-name>'][0]
 for v in pkg['versions']:
     url = v['binaries'][0]['url']
-    version = v['latestVersion']
+    version = v.get('latestVersion') or v.get('latestRulesVersion')
     ok = f'-{version}-' in url and f'/{version}/' in url
     print(f\"{'✓' if ok else '✗'} {v['platformVersion']}: {url.split('/')[-1]}\")"
 ```

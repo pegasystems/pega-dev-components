@@ -475,11 +475,154 @@ function catalog_release() {
     return 0
 }
 
+################################################################################
+# GenAI-Specific Catalog Update
+# Handles the ai-authoring-rules split version fields:
+#   latestRulesVersion, latestSkillVersion, latestMcpVersion, latestAutopilotVersion
+#   isAutopilotDependent
+################################################################################
+
+function catalog_update_genai_json() {
+    local manifest_file="$1"
+    local update_date="$2"
+    local rules_version="$3"
+    local skill_version="${4:-}"
+    local mcp_version="${5:-}"
+    local autopilot_version="${6:-}"
+    local autopilot_dependent="${7:-}"
+
+    if [ -z "$manifest_file" ] || [ -z "$update_date" ] || [ -z "$rules_version" ]; then
+        echo "Usage: catalog_update_genai_json <manifest_file> <update_date> <rules_version> [skill_version] [mcp_version] [autopilot_version] [autopilot_dependent]"
+        return 1
+    fi
+
+    local repo_root=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['repo_root'])")
+    local index_file="${repo_root}/$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['index_file'])")"
+    local package=$(python3 -c "import json; print(json.load(open('$manifest_file'))['package'])")
+
+    if [ ! -f "$index_file" ]; then
+        echo "ERROR: Catalog file not found: $index_file"
+        return 1
+    fi
+
+    echo "Updating GenAI catalog: $index_file"
+
+    local backup_file="${index_file}.backup"
+
+    if ! _skip_in_dry_run "Creating backup"; then
+        cp "$index_file" "$backup_file"
+    fi
+
+    local platforms=$(python3 -c "import json; data=json.load(open('$manifest_file')); [print(p) for p in data['platforms']]")
+
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        _dry_run_msg "Would update GenAI catalog with:"
+        _dry_run_msg "  latestRulesVersion: $rules_version"
+        [ -n "$skill_version" ]      && _dry_run_msg "  latestSkillVersion: $skill_version"
+        [ -n "$mcp_version" ]        && _dry_run_msg "  latestMcpVersion: $mcp_version"
+        [ -n "$autopilot_version" ]  && _dry_run_msg "  latestAutopilotVersion: $autopilot_version"
+        [ -n "$autopilot_dependent" ] && _dry_run_msg "  isAutopilotDependent: $autopilot_dependent"
+        _dry_run_msg "  updateDate: $update_date"
+        _dry_run_msg "  Platforms:"
+        echo "$platforms" | while read -r p; do
+            [ -n "$p" ] && _dry_run_msg "    - $p"
+        done
+    else
+        python3 << PYEOF
+import json
+import re
+
+with open('$index_file') as f:
+    catalog = json.load(f)
+
+for pkg in catalog['packages']:
+    if pkg['package'] != '$package':
+        continue
+
+    for version_entry in pkg['versions']:
+        if version_entry['platformVersion'] not in """$platforms""".split('\n'):
+            continue
+
+        print('  Updating platform: ' + version_entry['platformVersion'])
+
+        # Always update rules version and date
+        version_entry['latestRulesVersion'] = '$rules_version'
+        version_entry['updateDate'] = '$update_date'
+
+        # Update optional version fields only when provided
+        if '$skill_version':
+            version_entry['latestSkillVersion'] = '$skill_version'
+        if '$mcp_version':
+            version_entry['latestMcpVersion'] = '$mcp_version'
+        if '$autopilot_version':
+            version_entry['latestAutopilotVersion'] = '$autopilot_version'
+        if '$autopilot_dependent':
+            version_entry['isAutopilotDependent'] = '$autopilot_dependent'.lower() == 'true'
+
+        # Update binary URLs using the rules version (primary artifact driver)
+        for binary in version_entry['binaries']:
+            binary['url'] = re.sub(r'/0\.[0-9]+\.[0-9]+/', f'/$rules_version/', binary['url'])
+            binary['url'] = re.sub(r'-0\.[0-9]+\.[0-9]+-', f'-$rules_version-', binary['url'])
+
+with open('$index_file', 'w') as f:
+    json.dump(catalog, f, indent=4)
+PYEOF
+    fi
+
+    echo "✓ GenAI catalog updated successfully"
+    return 0
+}
+
+################################################################################
+# GenAI-Specific Verification (checks latestRulesVersion instead of latestVersion)
+################################################################################
+
+function catalog_verify_genai_render() {
+    local repo_root="$1"
+    local rules_version="$2"
+    local port="${3:-8000}"
+
+    if [ -z "$repo_root" ] || [ -z "$rules_version" ]; then
+        echo "Usage: catalog_verify_genai_render <repo_root> <rules_version> [port]"
+        return 1
+    fi
+
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        _dry_run_msg "Would start HTTP server on port $port and verify rules version $rules_version"
+        _dry_run_msg "Would test catalog API for: \"latestRulesVersion\": \"$rules_version\""
+        echo "✓ GenAI catalog verification skipped (dry-run mode)"
+        return 0
+    fi
+
+    echo "Starting HTTP server on port $port..."
+    cd "$repo_root"
+    timeout 15 python3 -m http.server "$port" > /tmp/catalog_server.log 2>&1 &
+    local server_pid=$!
+
+    sleep 2
+
+    echo "Testing GenAI catalog API..."
+    if ! curl -s "http://localhost:$port/index.json" | grep -q "\"latestRulesVersion\": \"$rules_version\""; then
+        echo "ERROR: latestRulesVersion $rules_version not found in rendered catalog"
+        kill $server_pid 2>/dev/null || true
+        return 1
+    fi
+
+    echo "✓ GenAI catalog renders correctly with latestRulesVersion $rules_version"
+
+    kill $server_pid 2>/dev/null || true
+    sleep 1
+
+    return 0
+}
+
 # Export functions for sourcing
 export -f catalog_check_environment
 export -f catalog_validate_manifest
 export -f catalog_download_assets
 export -f catalog_update_json
+export -f catalog_update_genai_json
 export -f catalog_verify_render
+export -f catalog_verify_genai_render
 export -f catalog_git_workflow
 export -f catalog_release
