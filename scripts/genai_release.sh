@@ -3,9 +3,9 @@
 ################################################################################
 # GenAI (AI Authoring Rules) Component Catalog Release Wrapper
 # Usage: ./genai_release.sh [--dry-run] [--no-commit] <version> <work_item> <release_date>
-# Example: ./genai_release.sh 0.0.19 RLS-99999 2026-05-27
-# Dry-run: ./genai_release.sh --dry-run 0.0.19 RLS-99999 2026-05-27
-# No-commit: ./genai_release.sh --no-commit 0.0.19 RLS-99999 2026-05-27
+# Example: ./genai_release.sh 1.0.1 RLS-99999 2026-07-10
+# Dry-run: ./genai_release.sh --dry-run 1.0.1 RLS-99999 2026-07-10
+# No-commit: ./genai_release.sh --no-commit 1.0.1 RLS-99999 2026-07-10
 ################################################################################
 
 set -e
@@ -47,18 +47,18 @@ if [ "$#" -ne 3 ]; then
     echo "Usage: $0 [--dry-run] [--no-commit] <version> <work_item> <release_date>"
     echo ""
     echo "Arguments:"
-    echo "  version       - Semantic version (e.g., 0.0.19)"
-    echo "  work_item     - Work item ID (e.g., RLS-99999)"
-    echo "  release_date  - Release date in YYYY-MM-DD format (e.g., 2026-05-27)"
-    echo ""
-    echo "Options:"
-    echo "  --dry-run     - Preview changes without committing"
-    echo "  --no-commit   - Stage and commit manually (skip auto-push)"
-    echo ""
-    echo "Examples:"
-    echo "  $0 0.0.19 RLS-99999 2026-05-27"
-    echo "  $0 --dry-run 0.0.19 RLS-99999 2026-05-27"
-    echo "  $0 --no-commit 0.0.19 RLS-99999 2026-05-27"
+  echo "  version       - Semantic version (e.g., 1.0.1)"
+  echo "  work_item     - Work item ID (e.g., RLS-99999)"
+  echo "  release_date  - Release date in YYYY-MM-DD format (e.g., 2026-07-10)"
+  echo ""
+  echo "Options:"
+  echo "  --dry-run     - Preview changes without committing"
+  echo "  --no-commit   - Stage and commit manually (skip auto-push)"
+  echo ""
+  echo "Examples:"
+  echo "  $0 1.0.1 RLS-99999 2026-07-10"
+  echo "  $0 --dry-run 1.0.1 RLS-99999 2026-07-10"
+  echo "  $0 --no-commit 1.0.1 RLS-99999 2026-07-10"
     echo ""
     exit 1
 fi
