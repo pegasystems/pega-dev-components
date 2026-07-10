@@ -100,6 +100,14 @@ JAR variants:
 - `blueprint-<version>-bundle.jar` - for 23.1.0, 24.1.0, 24.2.0
 - `blueprint-<version>-bundle-jakarta.jar` - for 25.1.0, 26.1.0
 
+AI Authoring Rules supports: 24.2.0, 25.1.0, 26.1.0, 27.1.0
+
+JAR variants:
+- `genai-<version>-bundle-24.2.jar` - for 24.2.0
+- `genai-<version>-bundle-25.1.jar` - for 25.1.0
+- `genai-<version>-bundle-26.1.jar` - for 26.1.0
+- `genai-<version>-bundle-27.1.jar` - for 27.1.0
+
 ## Troubleshooting
 
 | Issue | Solution |
