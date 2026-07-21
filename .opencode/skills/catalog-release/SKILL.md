@@ -1,12 +1,13 @@
 ---
 name: catalog-release
-description: Release components to the Pega Dev Components catalog. Use when the user asks to "publish", "release", or "deploy" a component like Blueprint or CDH, or wants to walk through the release process.
+description: Release components to the Pega Dev Components catalog. Use when the user asks to "publish", "release", or "deploy" a component like Blueprint, CDH, or GenAI, or wants to walk through the release process.
 metadata:
   audience: personal
   workflow: release
 tools:
   - bash
   - read
+  - question
 ---
 
 # Catalog Release Skill
@@ -19,6 +20,7 @@ Release components to the Pega Dev Components catalog hosted on GitHub Pages.
 |-----------|---------|--------|
 | Blueprint | `platform-blueprint-component` | `./scripts/blueprint_release.sh` |
 | CDH | `cdh-blueprint-component` | `./scripts/cdh_release.sh` |
+| GenAI | `ai-authoring-rules` | `./scripts/genai_release.sh` |
 
 ## Prerequisites
 
@@ -39,7 +41,7 @@ Before releasing, ensure:
 
 ### Release a Component
 
-Trigger: "release blueprint 0.2.13", "publish CDH 0.0.2", "deploy blueprint"
+Trigger: "release blueprint 0.2.13", "publish CDH 0.0.2", "deploy blueprint", "release gen-ai 1.0.2"
 
 1. **Identify component and version** from user request
 2. **Ask for work item ID** if not provided (format: `RLS-XXXXX`)
@@ -180,6 +182,14 @@ Blueprint supports: 23.1.0, 24.1.0, 24.2.0, 25.1.0, 26.1.0
 JAR variants:
 - `blueprint-<version>-bundle.jar` - for 23.1.0, 24.1.0, 24.2.0
 - `blueprint-<version>-bundle-jakarta.jar` - for 25.1.0, 26.1.0
+
+GenAI supports: 24.2.0, 25.1.0, 26.1.0, 27.1.0
+
+JAR variants:
+- `genai-<version>-bundle-24.2.jar` - for 24.2.0
+- `genai-<version>-bundle-25.1.jar` - for 25.1.0
+- `genai-<version>-bundle-26.1.jar` - for 26.1.0
+- `genai-<version>-bundle-27.1.jar` - for 27.1.0
 
 ---
 
