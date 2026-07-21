@@ -257,12 +257,12 @@ for pkg in catalog['packages']:
         version_entry['latestVersion'] = '$version'
         version_entry['updateDate'] = '$update_date'
         
-        # Update URLs (both path and filename)
+        # Update URLs (both path and filename) for any semantic version.
         for binary in version_entry['binaries']:
-            # Replace version in path
-            binary['url'] = re.sub(r'/0\.[0-9]+\.[0-9]+/', f'/$version/', binary['url'])
-            # Replace version in filename (e.g., blueprint-0.2.11-bundle.jar -> blueprint-0.2.13-bundle.jar)
-            binary['url'] = re.sub(r'-0\.[0-9]+\.[0-9]+-', f'-$version-', binary['url'])
+            # Replace the version path segment before the asset filename.
+            binary['url'] = re.sub(r'/' + re.escape(pkg['package']) + r'/[^/]+/', f'/{pkg["package"]}/$version/', binary['url'])
+            # Replace the semantic version embedded in the filename.
+            binary['url'] = re.sub(r'-\d+\.\d+\.\d+(-)', f'-$version\\1', binary['url'])
 
 # Write updated catalog
 with open('$index_file', 'w') as f:
