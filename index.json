@@ -98,45 +98,56 @@
             "versions": [
                 {
                     "platformVersion": "24.2.0",
-                    "latestVersion": "1.0.3",
-                    "updateDate": "2026-07-21",
+                    "latestVersion": "1.1.0",
+                    "updateDate": "2026-08-10",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/1.0.3/genai-1.0.3-bundle-24.2.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/1.1.0/genai-1.1.0-bundle-24.2.0.jar?download="
                         }
                     ]
                 },
                 {
                     "platformVersion": "25.1.0",
-                    "latestVersion": "1.0.3",
-                    "updateDate": "2026-07-21",
+                    "latestVersion": "1.1.0",
+                    "updateDate": "2026-08-10",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/1.0.3/genai-1.0.3-bundle-25.1.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/1.1.0/genai-1.1.0-bundle-25.1.0.jar?download="
                         }
                     ]
                 },
                 {
                     "platformVersion": "26.1.0",
-                    "latestVersion": "1.0.3",
-                    "updateDate": "2026-07-21",
+                    "latestVersion": "1.1.0",
+                    "updateDate": "2026-08-10",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/1.0.3/genai-1.0.3-bundle-26.1.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/1.1.0/genai-1.1.0-bundle-26.1.0.jar?download="
+                        }
+                    ]
+                },
+                {
+                    "platformVersion": "26.1.1",
+                    "latestVersion": "1.1.0",
+                    "updateDate": "2026-08-10",
+                    "binaries": [
+                        {
+                            "name": "MAIN",
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/1.1.0/genai-1.1.0-bundle-26.1.1.jar?download="
                         }
                     ]
                 },
                 {
                     "platformVersion": "27.1.0",
-                    "latestVersion": "1.0.3",
-                    "updateDate": "2026-07-21",
+                    "latestVersion": "1.1.0",
+                    "updateDate": "2026-08-10",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/1.0.3/genai-1.0.3-bundle-27.1.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/ai-authoring-rules/1.1.0/genai-1.1.0-bundle-27.1.0.jar?download="
                         }
                     ]
                 }
