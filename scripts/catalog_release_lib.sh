@@ -262,7 +262,7 @@ for pkg in catalog['packages']:
             # Replace the version path segment before the asset filename.
             binary['url'] = re.sub(r'/' + re.escape(pkg['package']) + r'/[^/]+/', f'/{pkg["package"]}/$version/', binary['url'])
             # Replace the semantic version embedded in the filename.
-            binary['url'] = re.sub(r'-\d+\.\d+\.\d+(-)', f'-$version\\1', binary['url'])
+            binary['url'] = re.sub(r'-\d+\.\d+\.\d+-', f'-$version-', binary['url'])
 
 # Write updated catalog
 with open('$index_file', 'w') as f:
