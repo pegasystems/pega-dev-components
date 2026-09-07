@@ -160,7 +160,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${generateVersionRows(package.versions)}
+                            ${generateVersionRows(package.versions, package.package)}
                         </tbody>
                     </table>
                 `;
@@ -169,7 +169,7 @@
             });
         }
 
-        function generateVersionRows(versions) {
+        function generateVersionRows(versions, packageName) {
             // Group consecutive versions by their binary set
             const groups = [];
             let currentGroup = null;
@@ -212,11 +212,11 @@
                 let displayPlatform;
                 if (versions_in_group.length === 1) {
                     // Single version in group - show as-is
-                    displayPlatform = firstVersion.platformVersion.replace(/\.0$/, "");
+                    displayPlatform = formatPlatformVersion(firstVersion.platformVersion, packageName);
                 } else {
                     // Multiple versions in group - show range
-                    const first = firstVersion.platformVersion.replace(/\.0$/, "");
-                    const last = lastVersion.platformVersion.replace(/\.0$/, "");
+                    const first = formatPlatformVersion(firstVersion.platformVersion, packageName);
+                    const last = formatPlatformVersion(lastVersion.platformVersion, packageName);
                     
                     // If last is just an increment of first, use + notation
                     const firstNum = parseFloat(first);
@@ -259,6 +259,12 @@
                     <td>${binaryLinks}</td>
                 </tr>`;
             }).join('');
+        }
+
+        function formatPlatformVersion(platformVersion, packageName) {
+            return packageName === 'ai-authoring-rules'
+                ? platformVersion
+                : platformVersion.replace(/\.0$/, "");
         }
     </script>
 </body>
