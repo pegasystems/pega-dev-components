@@ -1,0 +1,50 @@
+{
+  "app_name": "cs-blueprint",
+  "package": "cs-blueprint-component",
+  "platforms": [
+    "23.1.0",
+    "24.1.0",
+    "24.2.0",
+    "25.1.0",
+    "26.1.0"
+  ],
+  "artifacts": {
+    "source": "local",
+    "local_path": "assets/components/platform-blueprint-component/cs-blueprint-component/PegaCS-Constellation-Comp-Blueprint_25082026.jar",
+    "base_url": "",
+    "files": [
+      {
+        "name": "PegaCS-Constellation-Comp-Blueprint_25082026.jar",
+        "platforms": [
+          "23.1.0",
+          "24.1.0",
+          "24.2.0",
+          "25.1.0",
+          "26.1.0"
+        ]
+      }
+    ]
+  },
+  "catalog": {
+    "repo_root": "/home/sartm/code/component-catalog/pega-dev-components",
+    "index_file": "index.json",
+    "asset_path_template": "assets/components/{PACKAGE}/{VERSION}/",
+    "subpackage_of": "platform-blueprint-component",
+    "prerequisites": [
+      {
+        "type": "application",
+        "identifier": "CustomerService-Constellation",
+        "version": "8"
+      },
+      {
+        "type": "ruleset",
+        "identifier": "PegaCS-Constellation-Comp-Blueprint",
+        "version": "01-01-01"
+      }
+    ]
+  },
+  "release": {
+    "branch_template": "chore/cs-bp-component/{VERSION}",
+    "commit_message_template": "{WORK_ITEM} {PACKAGE} {VERSION}"
+  }
+}

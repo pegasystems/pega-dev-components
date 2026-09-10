@@ -19,6 +19,7 @@ Release components to the Pega Dev Components catalog hosted on GitHub Pages.
 | Component | Package | Script |
 |-----------|---------|--------|
 | Blueprint | `platform-blueprint-component` | `./scripts/blueprint_release.sh` |
+| CS Blueprint Component | `cs-blueprint-component` | `./scripts/cs_blueprint_release.sh` |
 | CDH | `cdh-blueprint-component` | `./scripts/cdh_release.sh` |
 | GenAI | `ai-authoring-rules` | `./scripts/genai_release.sh` |
 
@@ -41,7 +42,7 @@ Before releasing, ensure:
 
 ### Release a Component
 
-Trigger: "release blueprint 0.2.13", "publish CDH 0.0.2", "deploy blueprint", "release gen-ai 1.0.2"
+Trigger: "release blueprint 0.2.13", "release CS Blueprint 0.1.0", "publish CDH 0.0.2", "deploy blueprint", "release gen-ai 1.0.2"
 
 1. **Identify component and version** from user request
 2. **Ask for work item ID** if not provided (format: `RLS-XXXXX`)
@@ -182,6 +183,10 @@ Blueprint supports: 23.1.0, 24.1.0, 24.2.0, 25.1.0, 26.1.0
 JAR variants:
 - `blueprint-<version>-bundle.jar` - for 23.1.0, 24.1.0, 24.2.0
 - `blueprint-<version>-bundle-jakarta.jar` - for 25.1.0, 26.1.0
+
+CS Blueprint Component supports: 23.1.0, 24.1.0, 24.2.0, 25.1.0, 26.1.0
+
+The CS Blueprint release uses a local artifact and does not require `artifactory_key`. Supply a different source JAR with `--artifact-path <path>`; otherwise it uses the path configured in `manifests/cs-blueprint.json`.
 
 GenAI supports: 24.2.0, 25.1.0, 26.1.0, 27.1.0
 
