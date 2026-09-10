@@ -19,6 +19,7 @@ Release components to the Pega Dev Components catalog hosted on GitHub Pages.
 | Component | Package | Script |
 |-----------|---------|--------|
 | Blueprint | `platform-blueprint-component` | `./scripts/blueprint_release.sh` |
+| CS Blueprint Component | `cs-blueprint-component` | `./scripts/cs_blueprint_release.sh` |
 | CDH | `cdh-blueprint-component` | `./scripts/cdh_release.sh` |
 | GenAI | `ai-authoring-rules` | `./scripts/genai_release.sh` |
 
@@ -26,7 +27,7 @@ Release components to the Pega Dev Components catalog hosted on GitHub Pages.
 
 Before releasing, ensure:
 
-1. **Artifactory key is set:**
+1. **Artifactory key is set** for Artifactory-backed components:
    ```bash
    export artifactory_key="your-artifactory-token"
    ```
@@ -41,7 +42,7 @@ Before releasing, ensure:
 
 ### Release a Component
 
-Trigger: "release blueprint 0.2.13", "publish CDH 0.0.2", "deploy blueprint", "release gen-ai 1.0.2"
+Trigger: "release blueprint 0.2.13", "release CS Blueprint 0.1.0", "publish CDH 0.0.2", "deploy blueprint", "release gen-ai 1.0.2"
 
 1. **Identify component and version** from user request
 2. **Ask for work item ID** if not provided (format: `RLS-XXXXX`)
@@ -73,6 +74,19 @@ Trigger: "release blueprint 0.2.13", "publish CDH 0.0.2", "deploy blueprint", "r
        print(f\"{'✓' if ok else '✗'} {v['platformVersion']}: {url.split('/')[-1]}\")"
    ```
 8. **Provide PR URL** for user to review and merge
+
+For CS Blueprint Component, use the local source JAR configured in `manifests/cs-blueprint.json`:
+
+```bash
+./scripts/cs_blueprint_release.sh --dry-run <version> <work_item> <date>
+./scripts/cs_blueprint_release.sh <version> <work_item> <date>
+```
+
+To release a different local JAR without changing the manifest:
+
+```bash
+./scripts/cs_blueprint_release.sh --artifact-path <path-to-jar> <version> <work_item> <date>
+```
 
 ### Dry-Run Release
 
@@ -167,6 +181,7 @@ for pkg in data['packages']:
 |------|---------|
 | `--dry-run` | Preview what would happen without making changes |
 | `--no-commit` | Stage changes locally, push manually later |
+| `--artifact-path <path>` | Use the specified local JAR instead of the source artifact configured in the manifest; supported by CS Blueprint Component |
 
 ### After Merge
 
@@ -182,6 +197,10 @@ Blueprint supports: 23.1.0, 24.1.0, 24.2.0, 25.1.0, 26.1.0
 JAR variants:
 - `blueprint-<version>-bundle.jar` - for 23.1.0, 24.1.0, 24.2.0
 - `blueprint-<version>-bundle-jakarta.jar` - for 25.1.0, 26.1.0
+
+CS Blueprint Component supports: 23.1.0, 24.1.0, 24.2.0, 25.1.0, 26.1.0
+
+The CS Blueprint release uses a local artifact and does not require `artifactory_key`. Supply a different source JAR with `--artifact-path <path>`; otherwise it uses the path configured in `manifests/cs-blueprint.json`. It supports `--dry-run`, `--no-commit`, and `--artifact-path <path>`.
 
 GenAI supports: 24.2.0, 25.1.0, 26.1.0, 27.1.0
 

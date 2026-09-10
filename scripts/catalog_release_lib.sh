@@ -124,8 +124,6 @@ function catalog_download_assets() {
         return 1
     fi
     
-    catalog_check_environment || return 1
-    
     # Parse manifest using Python
     local manifest_data=$(python3 << PYEOF
 import json
@@ -135,6 +133,8 @@ print(json.dumps({
     'repo_root': data['catalog']['repo_root'],
     'package': data['package'],
     'asset_path': data['catalog']['asset_path_template'],
+    'source': data['artifacts'].get('source', 'artifactory'),
+    'local_path': data['artifacts'].get('local_path', ''),
     'base_url': data['artifacts']['base_url'],
     'files': [f['name'] for f in data['artifacts']['files']]
 }))
@@ -144,8 +144,18 @@ PYEOF
     local repo_root=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['repo_root'])")
     local package=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['package'])")
     local asset_path=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['asset_path'])")
+    local source=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['source'])")
+    local local_path=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['local_path'])")
+    local local_path="${CATALOG_LOCAL_ARTIFACT:-$local_path}"
     local base_url=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['base_url'])")
-    local token="$artifactory_key"
+    local token="${artifactory_key:-}"
+
+    if [ "$source" = "artifactory" ]; then
+        catalog_check_environment || return 1
+    elif [ "$source" != "local" ]; then
+        echo "ERROR: Unsupported artifact source: $source"
+        return 1
+    fi
     
     # Construct target directory
     local target_dir="${repo_root}/${asset_path//\{PACKAGE\}/$package}"
@@ -162,6 +172,9 @@ PYEOF
     # Download each artifact file
     echo "$manifest_data" | python3 -c "import sys, json; files = json.load(sys.stdin)['files']; [print(f) for f in files]" | while read -r file_template; do
         local filename="${file_template//x.x.x/$version}"
+        if [ "$source" = "local" ] && [ -n "${CATALOG_LOCAL_ARTIFACT:-}" ]; then
+            filename="$(basename "$local_path")"
+        fi
         local url="${base_url//x.x.x/$version}${filename}"
         local tempfile="${target_dir}/${filename}.temp"
         local target_file="${target_dir}/${filename}"
@@ -169,7 +182,26 @@ PYEOF
         echo "  Downloading: $filename"
         
         if [ "$CATALOG_DRY_RUN" = "1" ]; then
-            _dry_run_msg "Would download: $url → $target_file"
+            if [ "$source" = "local" ]; then
+                if [[ "$local_path" = /* ]]; then
+                    _dry_run_msg "Would copy: ${local_path} → $target_file"
+                else
+                    _dry_run_msg "Would copy: ${repo_root}/${local_path} → $target_file"
+                fi
+            else
+                _dry_run_msg "Would download: $url → $target_file"
+            fi
+        elif [ "$source" = "local" ]; then
+            local source_file="$local_path"
+            if [[ "$source_file" != /* ]]; then
+                source_file="${repo_root}/${source_file}"
+            fi
+            if [ ! -f "$source_file" ]; then
+                echo "    ✗ Local artifact not found: $source_file"
+                return 1
+            fi
+            cp "$source_file" "$target_file"
+            echo "    ✓ $source_file"
         else
             response=$(curl -H "X-JFrog-Art-Api: $token" -s -w "%{http_code}" -o "$tempfile" "$url" 2>&1)
             
@@ -242,26 +274,49 @@ with open('$index_file') as f:
     catalog = json.load(f)
 
 # Find the package
-for pkg in catalog['packages']:
-    if pkg['package'] != '$package':
-        continue
-    
-    # Update each platform version
+pkg = next((entry for entry in catalog['packages'] if entry['package'] == '$package'), None)
+if pkg is None:
+    manifest = json.load(open('$manifest_file'))
+    pkg = {
+        'name': manifest['catalog'].get('package_name', manifest['app_name']),
+        'package': '$package',
+        'versions': []
+    }
+    catalog['packages'].append(pkg)
+
+    for platform in """$platforms""".split('\n'):
+        if not platform:
+            continue
+        files = manifest['artifacts']['files']
+        artifact = next((item['name'] for item in files if platform in item['platforms']), None)
+        if artifact is None:
+            raise ValueError(f'No artifact configured for platform {platform}')
+        filename = artifact.replace('x.x.x', '$version')
+        version_entry = {
+            'platformVersion': platform,
+            'latestVersion': '$version',
+            'updateDate': '$update_date',
+            'binaries': [{
+                'name': 'MAIN',
+                'url': f'https://pegasystems.github.io/pega-dev-components/assets/components/{pkg["package"]}/$version/{filename}?download='
+            }]
+        }
+        if manifest['catalog'].get('documentation_url'):
+            version_entry['documentation'] = [{
+                'name': 'README',
+                'url': manifest['catalog']['documentation_url']
+            }]
+        pkg['versions'].append(version_entry)
+else:
     for version_entry in pkg['versions']:
         if version_entry['platformVersion'] not in """$platforms""".split('\n'):
             continue
-        
+
         print('  Updating platform: ' + version_entry['platformVersion'])
-        
-        # Update version and date
         version_entry['latestVersion'] = '$version'
         version_entry['updateDate'] = '$update_date'
-        
-        # Update URLs (both path and filename) for any semantic version.
         for binary in version_entry['binaries']:
-            # Replace the version path segment before the asset filename.
             binary['url'] = re.sub(r'/' + re.escape(pkg['package']) + r'/[^/]+/', f'/{pkg["package"]}/$version/', binary['url'])
-            # Replace the semantic version embedded in the filename.
             binary['url'] = re.sub(r'-\d+\.\d+\.\d+(-)', rf'-$version\1', binary['url'])
 
 # Write updated catalog
@@ -271,6 +326,73 @@ PYEOF
     fi
     
     echo "✓ Catalog updated successfully"
+    return 0
+}
+
+function catalog_update_subpackage_json() {
+    local manifest_file="$1"
+    local version="$2"
+    local update_date="$3"
+
+    if [ -z "$manifest_file" ] || [ -z "$version" ] || [ -z "$update_date" ]; then
+        echo "Usage: catalog_update_subpackage_json <manifest_file> <version> <update_date>"
+        return 1
+    fi
+
+    local repo_root=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['repo_root'])")
+    local index_file="${repo_root}/$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['index_file'])")"
+    local package=$(python3 -c "import json; print(json.load(open('$manifest_file'))['package'])")
+    local parent_package=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['subpackage_of'])")
+
+    if [ ! -f "$index_file" ]; then
+        echo "ERROR: Catalog file not found: $index_file"
+        return 1
+    fi
+
+    echo "Updating Blueprint subcomponent in catalog: $index_file"
+
+    if [ "$CATALOG_DRY_RUN" = "1" ]; then
+        _dry_run_msg "Would add or update $package beneath $parent_package for each configured platform"
+        return 0
+    fi
+
+    cp "$index_file" "${index_file}.backup"
+    python3 << PYEOF
+import json
+
+with open('$manifest_file') as f:
+    manifest = json.load(f)
+with open('$index_file') as f:
+    catalog = json.load(f)
+
+parent = next((entry for entry in catalog['packages'] if entry['package'] == '$parent_package'), None)
+if parent is None:
+    raise ValueError('Parent package not found: $parent_package')
+
+artifact = '$CATALOG_LOCAL_ARTIFACT' if '$CATALOG_LOCAL_ARTIFACT' else manifest['artifacts']['files'][0]['name'].replace('x.x.x', '$version')
+artifact = artifact.rsplit('/', 1)[-1]
+url = 'https://pegasystems.github.io/pega-dev-components/assets/components/$package/$version/' + artifact + '?download='
+
+for platform in manifest['platforms']:
+    platform_entry = next((entry for entry in parent['versions'] if entry['platformVersion'] == platform), None)
+    if platform_entry is None:
+        raise ValueError(f'Parent package does not support platform {platform}')
+
+    subpackages = platform_entry.setdefault('subpackages', [])
+    subpackage = next((entry for entry in subpackages if entry['package'] == '$package'), None)
+    if subpackage is None:
+        subpackage = {'package': '$package'}
+        subpackages.append(subpackage)
+
+    subpackage['version'] = '$version'
+    subpackage['prerequisites'] = manifest['catalog']['prerequisites']
+    subpackage['binaries'] = [{'name': 'MAIN', 'url': url}]
+
+with open('$index_file', 'w') as f:
+    json.dump(catalog, f, indent=4)
+PYEOF
+
+    echo "✓ Blueprint subcomponent updated successfully"
     return 0
 }
 
@@ -452,7 +574,12 @@ function catalog_release() {
     catalog_download_assets "$manifest_file" "$version" || return 1
     echo ""
     
-    catalog_update_json "$manifest_file" "$version" "$update_date" || return 1
+    local subpackage_of=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog'].get('subpackage_of', ''))")
+    if [ -n "$subpackage_of" ]; then
+        catalog_update_subpackage_json "$manifest_file" "$version" "$update_date" || return 1
+    else
+        catalog_update_json "$manifest_file" "$version" "$update_date" || return 1
+    fi
     echo ""
     
     local repo_root=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['repo_root'])")
@@ -480,6 +607,7 @@ export -f catalog_check_environment
 export -f catalog_validate_manifest
 export -f catalog_download_assets
 export -f catalog_update_json
+export -f catalog_update_subpackage_json
 export -f catalog_verify_render
 export -f catalog_git_workflow
 export -f catalog_release
