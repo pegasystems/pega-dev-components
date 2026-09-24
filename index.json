@@ -8,7 +8,7 @@
                 {
                     "platformVersion": "23.1.0",
                     "latestVersion": "0.2.20",
-                    "updateDate": "2026-09-09",
+                    "updateDate": "2026-09-16",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -19,13 +19,37 @@
                         {
                             "name": "README",
                             "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
+                        }
+                    ],
+                    "subpackages": [
+                        {
+                            "package": "cs-blueprint-component",
+                            "version": "0.0.1",
+                            "prerequisites": [
+                                {
+                                    "type": "application",
+                                    "identifier": "CustomerService-Constellation",
+                                    "version": "8"
+                                },
+                                {
+                                    "type": "ruleset",
+                                    "identifier": "PegaCS-Constellation-Comp-Blueprint",
+                                    "version": "01-01-01"
+                                }
+                            ],
+                            "binaries": [
+                                {
+                                    "name": "MAIN",
+                                    "url": "https://pegasystems.github.io/pega-dev-components/assets/components/cs-blueprint-component/0.0.1/PegaCS-Constellation-Comp-Blueprint_16092026.jar?download="
+                                }
+                            ]
                         }
                     ]
                 },
                 {
                     "platformVersion": "24.1.0",
                     "latestVersion": "0.2.20",
-                    "updateDate": "2026-09-09",
+                    "updateDate": "2026-09-16",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -36,13 +60,37 @@
                         {
                             "name": "README",
                             "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
+                        }
+                    ],
+                    "subpackages": [
+                        {
+                            "package": "cs-blueprint-component",
+                            "version": "0.0.1",
+                            "prerequisites": [
+                                {
+                                    "type": "application",
+                                    "identifier": "CustomerService-Constellation",
+                                    "version": "8"
+                                },
+                                {
+                                    "type": "ruleset",
+                                    "identifier": "PegaCS-Constellation-Comp-Blueprint",
+                                    "version": "01-01-01"
+                                }
+                            ],
+                            "binaries": [
+                                {
+                                    "name": "MAIN",
+                                    "url": "https://pegasystems.github.io/pega-dev-components/assets/components/cs-blueprint-component/0.0.1/PegaCS-Constellation-Comp-Blueprint_16092026.jar?download="
+                                }
+                            ]
                         }
                     ]
                 },
                 {
                     "platformVersion": "24.2.0",
                     "latestVersion": "0.2.20",
-                    "updateDate": "2026-09-09",
+                    "updateDate": "2026-09-16",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -54,12 +102,36 @@
                             "name": "README",
                             "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
                         }
+                    ],
+                    "subpackages": [
+                        {
+                            "package": "cs-blueprint-component",
+                            "version": "0.0.1",
+                            "prerequisites": [
+                                {
+                                    "type": "application",
+                                    "identifier": "CustomerService-Constellation",
+                                    "version": "8"
+                                },
+                                {
+                                    "type": "ruleset",
+                                    "identifier": "PegaCS-Constellation-Comp-Blueprint",
+                                    "version": "01-01-01"
+                                }
+                            ],
+                            "binaries": [
+                                {
+                                    "name": "MAIN",
+                                    "url": "https://pegasystems.github.io/pega-dev-components/assets/components/cs-blueprint-component/0.0.1/PegaCS-Constellation-Comp-Blueprint_16092026.jar?download="
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
                     "platformVersion": "25.1.0",
                     "latestVersion": "0.2.20",
-                    "updateDate": "2026-09-09",
+                    "updateDate": "2026-09-16",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -70,13 +142,37 @@
                         {
                             "name": "README",
                             "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
+                        }
+                    ],
+                    "subpackages": [
+                        {
+                            "package": "cs-blueprint-component",
+                            "version": "0.0.1",
+                            "prerequisites": [
+                                {
+                                    "type": "application",
+                                    "identifier": "CustomerService-Constellation",
+                                    "version": "8"
+                                },
+                                {
+                                    "type": "ruleset",
+                                    "identifier": "PegaCS-Constellation-Comp-Blueprint",
+                                    "version": "01-01-01"
+                                }
+                            ],
+                            "binaries": [
+                                {
+                                    "name": "MAIN",
+                                    "url": "https://pegasystems.github.io/pega-dev-components/assets/components/cs-blueprint-component/0.0.1/PegaCS-Constellation-Comp-Blueprint_16092026.jar?download="
+                                }
+                            ]
                         }
                     ]
                 },
                 {
                     "platformVersion": "26.1.0",
                     "latestVersion": "0.2.20",
-                    "updateDate": "2026-09-09",
+                    "updateDate": "2026-09-16",
                     "binaries": [
                         {
                             "name": "MAIN",
@@ -87,6 +183,71 @@
                         {
                             "name": "README",
                             "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
+                        }
+                    ],
+                    "subpackages": [
+                        {
+                            "package": "cs-blueprint-component",
+                            "version": "0.0.1",
+                            "prerequisites": [
+                                {
+                                    "type": "application",
+                                    "identifier": "CustomerService-Constellation",
+                                    "version": "8"
+                                },
+                                {
+                                    "type": "ruleset",
+                                    "identifier": "PegaCS-Constellation-Comp-Blueprint",
+                                    "version": "01-01-01"
+                                }
+                            ],
+                            "binaries": [
+                                {
+                                    "name": "MAIN",
+                                    "url": "https://pegasystems.github.io/pega-dev-components/assets/components/cs-blueprint-component/0.0.1/PegaCS-Constellation-Comp-Blueprint_16092026.jar?download="
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "platformVersion": "27.1.0",
+                    "latestVersion": "0.2.20",
+                    "updateDate": "2026-09-16",
+                    "binaries": [
+                        {
+                            "name": "MAIN",
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.20/blueprint-0.2.20-bundle-jakarta.jar?download="
+                        }
+                    ],
+                    "documentation": [
+                        {
+                            "name": "README",
+                            "url": "https://docs.pega.com/bundle/blueprint-import-module/page/platform/blueprint-import-module/blueprint-import-module.html"
+                        }
+                    ],
+                    "subpackages": [
+                        {
+                            "package": "cs-blueprint-component",
+                            "version": "0.0.1",
+                            "prerequisites": [
+                                {
+                                    "type": "application",
+                                    "identifier": "CustomerService-Constellation",
+                                    "version": "8"
+                                },
+                                {
+                                    "type": "ruleset",
+                                    "identifier": "PegaCS-Constellation-Comp-Blueprint",
+                                    "version": "01-01-01"
+                                }
+                            ],
+                            "binaries": [
+                                {
+                                    "name": "MAIN",
+                                    "url": "https://pegasystems.github.io/pega-dev-components/assets/components/cs-blueprint-component/0.0.1/PegaCS-Constellation-Comp-Blueprint_16092026.jar?download="
+                                }
+                            ]
                         }
                     ]
                 }
