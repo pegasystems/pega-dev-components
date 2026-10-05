@@ -6,6 +6,7 @@ Verifies all URLs in index.json by:
 1. Checking that asset files exist locally
 2. Starting a local HTTP server on port 8000
 3. Testing HTTP connections and validating file sizes match
+4. Validating the structure of catalog-display.json
 
 Usage:
     python3 scripts/verify_catalog.py [base_url]
@@ -95,29 +96,36 @@ def verify_html(base_url="http://localhost:8000"):
         else:
             html_results['error_count'] += 1
             html_results['errors'].append('Data loading mechanism not found')
+
+        # Check 3: Homepage display settings loading
+        if 'fetch(\'./catalog-display.json\')' in content or 'fetch("./catalog-display.json")' in content:
+            html_results['checks_passed'].append('Catalog display settings loading present')
+        else:
+            html_results['error_count'] += 1
+            html_results['errors'].append('Catalog display settings loading not found')
         
-        # Check 3: Package display logic
+        # Check 4: Package display logic
         if 'displayPackages' in content:
             html_results['checks_passed'].append('Package display logic present')
         else:
             html_results['error_count'] += 1
             html_results['errors'].append('Package display logic missing')
         
-        # Check 4: Version row generation
+        # Check 5: Version row generation
         if 'generateVersionRows' in content:
             html_results['checks_passed'].append('Version row generation present')
         else:
             html_results['error_count'] += 1
             html_results['errors'].append('Version row generation missing')
         
-        # Check 5: Table structure
+        # Check 6: Table structure
         if '<table>' in content and '<thead>' in content and '<tbody>' in content:
             html_results['checks_passed'].append('HTML table structure present')
         else:
             html_results['error_count'] += 1
             html_results['errors'].append('HTML table structure incomplete')
         
-        # Check 6: Error handling
+        # Check 7: Error handling
         if 'catch (error)' in content or 'catch(error)' in content:
             html_results['checks_passed'].append('Error handling present')
         else:
@@ -129,6 +137,78 @@ def verify_html(base_url="http://localhost:8000"):
         html_results['errors'].append(f"Failed to fetch/parse index.html: {str(e)}")
     
     return html_results
+
+
+def verify_display_config(display_json):
+    """Validate catalog-display.json syntax and supported structure."""
+    results = {'error_count': 0, 'errors': [], 'checks_passed': []}
+
+    try:
+        with open(display_json, 'r') as f:
+            config = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        results['error_count'] += 1
+        results['errors'].append(f'Unable to read valid JSON from {display_json}: {e}')
+        return results
+
+    if not isinstance(config, dict):
+        results['error_count'] += 1
+        results['errors'].append('Display settings must be a JSON object')
+        return results
+
+    supported_keys = ('hiddenPackages', 'hiddenVersions')
+    unknown_keys = set(config).difference(supported_keys)
+    if unknown_keys:
+        results['error_count'] += 1
+        results['errors'].append(f'Unknown display settings key(s): {", ".join(sorted(unknown_keys))}')
+
+    for key in supported_keys:
+        if key not in config:
+            results['error_count'] += 1
+            results['errors'].append(f'Missing required display settings key: {key}')
+        elif not isinstance(config[key], list):
+            results['error_count'] += 1
+            results['errors'].append(f'{key} must be an array')
+
+    hidden_packages = config.get('hiddenPackages')
+    if isinstance(hidden_packages, list):
+        for index, package in enumerate(hidden_packages):
+            if not isinstance(package, str) or not package.strip():
+                results['error_count'] += 1
+                results['errors'].append(f'hiddenPackages[{index}] must be a non-empty string')
+
+    hidden_versions = config.get('hiddenVersions')
+    if isinstance(hidden_versions, list):
+        allowed_version_keys = {'package', 'version', 'platformVersion'}
+        for index, rule in enumerate(hidden_versions):
+            if not isinstance(rule, dict):
+                results['error_count'] += 1
+                results['errors'].append(f'hiddenVersions[{index}] must be an object')
+                continue
+
+            unknown_rule_keys = set(rule) - allowed_version_keys
+            if unknown_rule_keys:
+                results['error_count'] += 1
+                results['errors'].append(
+                    f'hiddenVersions[{index}] has unknown key(s): {", ".join(sorted(unknown_rule_keys))}'
+                )
+
+            criteria_keys = {'version', 'platformVersion'} & set(rule)
+            if not criteria_keys:
+                results['error_count'] += 1
+                results['errors'].append(
+                    f'hiddenVersions[{index}] must specify version, platformVersion, or both'
+                )
+
+            for key in allowed_version_keys & set(rule):
+                if not isinstance(rule[key], str) or not rule[key].strip():
+                    results['error_count'] += 1
+                    results['errors'].append(f'hiddenVersions[{index}].{key} must be a non-empty string')
+
+    if results['error_count'] == 0:
+        results['checks_passed'].append('catalog-display.json structure is valid')
+
+    return results
 
 
 def verify_catalog(catalog_json, assets_dir, base_url="http://localhost:8000"):
@@ -224,7 +304,7 @@ def verify_catalog(catalog_json, assets_dir, base_url="http://localhost:8000"):
     return results
 
 
-def print_results(catalog_results, html_results=None):
+def print_results(catalog_results, html_results=None, display_results=None):
     """Print verification results in a readable format"""
 
     print("\n" + "="*100)
@@ -281,12 +361,29 @@ def print_results(catalog_results, html_results=None):
         else:
             print("\n✓ All HTML checks passed")
 
+    if display_results:
+        print("\n" + "="*100)
+        print("HOMEPAGE DISPLAY CONFIGURATION")
+        print("="*100)
+
+        if display_results['checks_passed']:
+            for check in display_results['checks_passed']:
+                print(f"✓ {check}")
+
+        if display_results['error_count'] > 0:
+            print(f"\n❌ Display configuration checks failed ({display_results['error_count']}):")
+            for error in display_results['errors']:
+                print(f"  ✗ {error}")
+        else:
+            print("✓ All display configuration checks passed")
+
     print("\n" + "="*100 + "\n")
 
-    # Return success only if both catalog and HTML (if tested) pass
+    # Return success only if every requested verification passes
     catalog_success = catalog_results['failed'] == 0
     html_success = html_results is None or html_results['error_count'] == 0
-    return catalog_success and html_success
+    display_success = display_results is None or display_results['error_count'] == 0
+    return catalog_success and html_success and display_success
 
 
 if __name__ == '__main__':
@@ -297,6 +394,7 @@ if __name__ == '__main__':
 
     repo_root = get_repo_root()
     catalog_json = repo_root / "index.json"
+    display_json = repo_root / "catalog-display.json"
     assets_dir = repo_root
 
     # Run catalog verification
@@ -304,8 +402,11 @@ if __name__ == '__main__':
     
     # Run HTML verification
     html_results = verify_html(base_url)
+
+    # Validate homepage display configuration
+    display_results = verify_display_config(display_json)
     
     # Print combined results
-    success = print_results(catalog_results, html_results)
+    success = print_results(catalog_results, html_results, display_results)
 
     sys.exit(0 if success else 1)

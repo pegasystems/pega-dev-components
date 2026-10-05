@@ -8,6 +8,9 @@
 
 set -e
 
+CATALOG_LIBRARY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CATALOG_LIBRARY_REPO_ROOT="$(dirname "$CATALOG_LIBRARY_DIR")"
+
 ################################################################################
 # Dry-Run Configuration
 ################################################################################
@@ -64,6 +67,63 @@ function _json_get_array() {
     local file="$1"
     local path="$2"
     python3 -c "import json; data=json.load(open('$file')); exec('result=data' + ''.join(f\"['{p}']\" if not p.startswith('[') else f\"[{p}]\" for p in '$path'.split('.'))); [print(item) for item in result]"
+}
+
+function _catalog_manifest_repo_root() {
+    local manifest_file="$1"
+    local repo_root
+
+    repo_root=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['repo_root'])") || return 1
+    repo_root="${repo_root//\{REPO_ROOT\}/$CATALOG_LIBRARY_REPO_ROOT}"
+    printf '%s\n' "$repo_root"
+}
+
+function _catalog_resolve_team_name() {
+    local branch_template="$1"
+
+    if [[ "$branch_template" != *"{TEAM_NAME}"* ]]; then
+        return 0
+    fi
+
+    if [ -z "${TEAM_NAME:-}" ]; then
+        if ! read -r -p "Enter team name for the release branch: " TEAM_NAME; then
+            echo "ERROR: A team name is required for branch template: $branch_template" >&2
+            return 1
+        fi
+    fi
+
+    if [ -z "$TEAM_NAME" ]; then
+        echo "ERROR: Team name cannot be empty" >&2
+        return 1
+    fi
+
+    if ! git check-ref-format --branch "team/$TEAM_NAME/placeholder/release" >/dev/null 2>&1; then
+        echo "ERROR: Invalid team name for a Git branch: $TEAM_NAME" >&2
+        return 1
+    fi
+
+    export TEAM_NAME
+}
+
+function _catalog_pull_request_url() {
+    local branch="$1"
+    local repo_remote
+    local repo_url
+
+    repo_remote=$(git config --get remote.origin.url) || return 1
+    case "$repo_remote" in
+        https://github.com/*) repo_url="${repo_remote#https://github.com/}" ;;
+        http://github.com/*) repo_url="${repo_remote#http://github.com/}" ;;
+        ssh://git@github.com/*) repo_url="${repo_remote#ssh://git@github.com/}" ;;
+        git@github.com:*) repo_url="${repo_remote#git@github.com:}" ;;
+        git://github.com/*) repo_url="${repo_remote#git://github.com/}" ;;
+        *)
+            echo "ERROR: Cannot generate GitHub PR URL from remote: $repo_remote" >&2
+            return 1
+            ;;
+    esac
+    repo_url="${repo_url%.git}"
+    printf 'https://github.com/%s/pull/new/%s\n' "$repo_url" "$branch"
 }
 
 ################################################################################
@@ -141,7 +201,7 @@ print(json.dumps({
 PYEOF
 )
     
-    local repo_root=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['repo_root'])")
+    local repo_root=$(_catalog_manifest_repo_root "$manifest_file")
     local package=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['package'])")
     local asset_path=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['asset_path'])")
     local source=$(echo "$manifest_data" | python3 -c "import sys, json; print(json.load(sys.stdin)['source'])")
@@ -234,7 +294,7 @@ function catalog_update_json() {
         return 1
     fi
     
-    local repo_root=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['repo_root'])")
+    local repo_root=$(_catalog_manifest_repo_root "$manifest_file")
     local index_file="${repo_root}/$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['index_file'])")"
     local package=$(python3 -c "import json; print(json.load(open('$manifest_file'))['package'])")
     
@@ -339,7 +399,7 @@ function catalog_update_subpackage_json() {
         return 1
     fi
 
-    local repo_root=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['repo_root'])")
+    local repo_root=$(_catalog_manifest_repo_root "$manifest_file")
     local index_file="${repo_root}/$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['index_file'])")"
     local package=$(python3 -c "import json; print(json.load(open('$manifest_file'))['package'])")
     local parent_package=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['subpackage_of'])")
@@ -462,6 +522,7 @@ function catalog_git_workflow() {
     
     # Construct branch name and commit message
     local branch="${branch_template//\{VERSION\}/$version}"
+    branch="${branch//\{TEAM_NAME\}/${TEAM_NAME:-}}"
     local commit_msg="${commit_template//\{VERSION\}/$version}"
     commit_msg="${commit_msg//\{WORK_ITEM\}/$work_item}"
     commit_msg="${commit_msg//\{PACKAGE\}/$package}"
@@ -473,8 +534,8 @@ function catalog_git_workflow() {
         _dry_run_msg "Would push to remote: origin/$branch"
         
         # Generate PR URL for preview
-        local repo_url=$(git config --get remote.origin.url | sed 's/\.git$//' | sed 's/.*://g')
-        local pr_url="https://github.com/${repo_url}/pull/new/${branch}"
+        local pr_url
+        pr_url=$(_catalog_pull_request_url "$branch") || return 1
         
         echo ""
         echo "✓ Git workflow preview complete"
@@ -515,8 +576,8 @@ function catalog_git_workflow() {
     git push -u origin "$branch"
     
     # Generate PR URL
-    local repo_url=$(git config --get remote.origin.url | sed 's/\.git$//' | sed 's/.*://g')
-    local pr_url="https://github.com/${repo_url}/pull/new/${branch}"
+    local pr_url
+    pr_url=$(_catalog_pull_request_url "$branch") || return 1
     
     echo ""
     echo "✓ Git workflow completed"
@@ -570,6 +631,18 @@ function catalog_release() {
     
     catalog_validate_manifest "$manifest_file" || return 1
     echo ""
+
+    local repo_root
+    repo_root=$(_catalog_manifest_repo_root "$manifest_file") || return 1
+    if [ ! -d "$repo_root" ]; then
+        echo "ERROR: Catalog repository root does not exist: $repo_root" >&2
+        return 1
+    fi
+
+    local branch_template
+    branch_template=$(python3 -c "import json; print(json.load(open('$manifest_file'))['release']['branch_template'])") || return 1
+    _catalog_resolve_team_name "$branch_template" || return 1
+    echo ""
     
     catalog_download_assets "$manifest_file" "$version" || return 1
     echo ""
@@ -582,9 +655,7 @@ function catalog_release() {
     fi
     echo ""
     
-    local repo_root=$(python3 -c "import json; print(json.load(open('$manifest_file'))['catalog']['repo_root'])")
     local package=$(python3 -c "import json; print(json.load(open('$manifest_file'))['package'])")
-    local branch_template=$(python3 -c "import json; print(json.load(open('$manifest_file'))['release']['branch_template'])")
     local commit_template=$(python3 -c "import json; print(json.load(open('$manifest_file'))['release']['commit_message_template'])")
     
     catalog_git_workflow "$repo_root" "$version" "$work_item" "$package" "$branch_template" "$commit_template" || return 1

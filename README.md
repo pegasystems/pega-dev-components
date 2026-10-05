@@ -51,3 +51,11 @@ The [index.json](https://github.com/pegasystems/pega-dev-components/index.json) 
 ```
 
 Each package can have multiple versions supporting different Pega Platform releases, with their respective binaries and documentation links.
+
+## Homepage display settings
+
+The homepage uses [`catalog-display.json`](catalog-display.json) to control visibility without changing the public catalog API in `index.json`. Hidden entries remain available through `index.json` and are still included in catalog verification.
+
+Use `hiddenPackages` for package IDs and `hiddenVersions` for catalog entries. A hidden-version rule can match a component version (the `latestVersion` value), a Pega platform version, or both. The optional `package` field scopes a rule to one package; without it, the rule applies to all packages. Keep visibility entries in `catalog-display.json` so they have a single source of truth.
+
+If a package has no versions left after filtering, its card is not shown. Remove an ID or version entry from `catalog-display.json` to show it again.

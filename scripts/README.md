@@ -43,6 +43,12 @@ Dry-run will:
 - ✗ NOT create git branch
 - ✗ NOT push to remote
 
+For manifests whose branch template contains `{TEAM_NAME}`, the release prompts for a team name before showing the preview. Set `TEAM_NAME` in the environment to skip the prompt, which is useful for automation:
+
+```bash
+TEAM_NAME=planetexpress ./genai_release.sh --dry-run 1.3.1 RLS-38976 2026-10-02
+```
+
 ### Verify a Release
 
 After running a release, validate that the catalog is correct:
@@ -140,12 +146,12 @@ To release a new component catalog:
        ]
      },
      "catalog": {
-       "repo_root": "/path/to/pega-dev-components",
+       "repo_root": "{REPO_ROOT}",
        "index_file": "index.json",
        "asset_path_template": "assets/components/{PACKAGE}/{VERSION}/"
      },
      "release": {
-       "branch_template": "team/team-name/{VERSION}/release",
+       "branch_template": "team/{TEAM_NAME}/{VERSION}/release",
        "commit_message_template": "{WORK_ITEM} {PACKAGE} {VERSION}"
      }
    }
@@ -180,10 +186,10 @@ To release a new component catalog:
 | `platforms` | List of Pega platform versions supported |
 | `artifacts.base_url` | Base URL for artifact downloads (use `x.x.x` for version placeholder) |
 | `artifacts.files` | List of artifact file names and which platforms they support |
-| `catalog.repo_root` | Absolute path to the catalog repo root |
+| `catalog.repo_root` | Absolute path to the catalog repo root, or `{REPO_ROOT}` to use the repository containing the release scripts |
 | `catalog.index_file` | Path to index.json (relative to repo_root) |
 | `catalog.asset_path_template` | Path template for assets (use `{PACKAGE}`, `{VERSION}` placeholders) |
-| `release.branch_template` | Git branch template (use `{VERSION}` placeholder) |
+| `release.branch_template` | Git branch template (supports `{VERSION}` and optional `{TEAM_NAME}`; the latter prompts unless `TEAM_NAME` is set) |
 | `release.commit_message_template` | Commit message template (use `{WORK_ITEM}`, `{PACKAGE}`, `{VERSION}` placeholders) |
 
 ## Library Functions
