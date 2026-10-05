@@ -1,0 +1,10 @@
+{
+    "hiddenPackages": [
+        "cdh-blueprint-component"
+    ],
+    "hiddenVersions": [
+        { "platformVersion": "27.1.0" },
+        { "platformVersion": "27.1.1" },
+        { "platformVersion": "26.1.2" }
+    ]
+}

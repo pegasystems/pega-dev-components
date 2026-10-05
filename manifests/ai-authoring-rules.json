@@ -44,12 +44,12 @@
     ]
   },
   "catalog": {
-    "repo_root": "/home/sartm/code/component-catalog/pega-dev-components",
+    "repo_root": "{REPO_ROOT}",
     "index_file": "index.json",
     "asset_path_template": "assets/components/{PACKAGE}/{VERSION}/"
   },
   "release": {
-    "branch_template": "team/planetexpress/{VERSION}/release",
+    "branch_template": "team/{TEAM_NAME}/{VERSION}/release",
     "commit_message_template": "{WORK_ITEM} {PACKAGE} {VERSION}"
   }
 }

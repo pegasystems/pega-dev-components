@@ -115,13 +115,22 @@
 
         async function fetchPackages() {
             try {
-                const response = await fetch('./index.json');
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch packages: ${response.status} ${response.statusText}`);
+                const [catalogResponse, displayResponse] = await Promise.all([
+                    fetch('./index.json'),
+                    fetch('./catalog-display.json')
+                ]);
+                if (!catalogResponse.ok) {
+                    throw new Error(`Failed to fetch packages: ${catalogResponse.status} ${catalogResponse.statusText}`);
                 }
-                
-                const data = await response.json();
-                displayPackages(data.packages);
+                if (!displayResponse.ok) {
+                    throw new Error(`Failed to fetch display settings: ${displayResponse.status} ${displayResponse.statusText}`);
+                }
+
+                const [data, displayConfig] = await Promise.all([
+                    catalogResponse.json(),
+                    displayResponse.json()
+                ]);
+                displayPackages(data.packages, displayConfig);
             } catch (error) {
                 console.error('Error loading packages:', error);
                 document.getElementById('loading').style.display = 'none';
@@ -131,20 +140,33 @@
             }
         }
 
-        function displayPackages(packages) {
+        function displayPackages(packages, displayConfig) {
             const packagesContainer = document.getElementById('packages-container');
             document.getElementById('loading').style.display = 'none';
-            
+
             if (!packages || packages.length === 0) {
                 packagesContainer.innerHTML = '<p>No packages available.</p>';
                 return;
             }
 
+            const hiddenPackages = new Set(displayConfig.hiddenPackages || []);
+            const hiddenVersions = displayConfig.hiddenVersions || [];
+
             packages.forEach(package => {
-                // Skip cdh-blueprint-component because its min platform version is not yet released
-                if (package.package === 'cdh-blueprint-component') {
+                if (hiddenPackages.has(package.package)) {
                     return;
                 }
+                const visibleVersions = package.versions.filter(version =>
+                    !hiddenVersions.some(hiddenVersion =>
+                        (!hiddenVersion.package || hiddenVersion.package === package.package) &&
+                        (!hiddenVersion.version || hiddenVersion.version === version.latestVersion) &&
+                        (!hiddenVersion.platformVersion || hiddenVersion.platformVersion === version.platformVersion)
+                    )
+                );
+                if (visibleVersions.length === 0) {
+                    return;
+                }
+
                 const packageCard = document.createElement('div');
                 packageCard.className = 'card';
                 const formattedName = package.name;
@@ -160,7 +182,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${generateVersionRows(package.versions, package.package)}
+                            ${generateVersionRows(visibleVersions, package.package)}
                         </tbody>
                     </table>
                 `;
