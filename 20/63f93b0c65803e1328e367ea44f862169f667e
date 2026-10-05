@@ -1,0 +1,53 @@
+scripts/README.md
+  s_6d01f167f421a4::t_90c71a619338fd 149,154
+  s_6d01f167f421a4::t_8d3622496e109f 46-51,189,192
+index.html
+  s_d3741b0ebaea44::t_7195f8826c543b 118-123,125-133,143,146,152-154,156-160,163-166,169,185
+  s_d3741b0ebaea44::t_b32cb74ac219a8 161-162
+scripts/verify_catalog.py
+  s_d3741b0ebaea44::t_314c739c962fc2 99-105,107,114,121,128,143-158,161-195,198-213,307,364-379,385-386,397,405-406,410
+  s_d3741b0ebaea44::t_ea44baefeba9b8 160
+  s_d3741b0ebaea44::t_c3df0fdb8a360c 142,407
+  s_d3741b0ebaea44::t_c48110b79191df 9,159
+  s_d3741b0ebaea44::t_2bad127a87a3cc 382
+  s_d3741b0ebaea44::t_64a756426cef34 196-197
+README.md
+  s_d3741b0ebaea44::t_7195f8826c543b 54-58,60-61
+  s_d3741b0ebaea44::t_e238dce4d463e8 59
+.gitignore
+  s_d3741b0ebaea44::t_98250013c9c0c8 1-2
+catalog-display.json
+  s_d3741b0ebaea44::t_b32cb74ac219a8 5-9
+  s_d3741b0ebaea44::t_7195f8826c543b 1-4,10
+scripts/catalog_release_lib.sh
+  s_6d01f167f421a4::t_689c4028b38b8e 11-13,72-106,127,204,297,402,525,634-644
+  s_6d01f167f421a4::t_0b5a0d7b30fdf4 108-114,124-126,537-538,579-580
+  s_6d01f167f421a4::t_9b0f731edcfc1c 115-123
+  s_6d01f167f421a4::t_906e849a2b96d8 107
+  s_6d01f167f421a4::t_8eb4b8f3381485 128
+  s_6d01f167f421a4::t_96f368f4e667d7 645
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2063f93b0c65803e1328e367ea44f862169f667e",
+  "prompts": {},
+  "sessions": {
+    "s_6d01f167f421a4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f019c4cdeffermzH53R0yp5I41",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "picada <david.picariello@pega.com>"
+    },
+    "s_d3741b0ebaea44": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ef40d2e4cffe6799a1nMKR2VAt",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "picada <david.picariello@pega.com>"
+    }
+  }
+}
