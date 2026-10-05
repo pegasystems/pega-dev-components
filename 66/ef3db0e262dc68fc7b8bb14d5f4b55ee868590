@@ -1,0 +1,30 @@
+index.json
+  s_d3741b0ebaea44::t_a6a5e02ec8457f 262-263,267,273-274,278,284-285,289,295-296,300,306-307,311,341
+manifests/ai-authoring-rules.json
+  s_6d01f167f421a4::t_8311d68b946b50 47
+  s_6d01f167f421a4::t_615f3422f1ebb2 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "66ef3db0e262dc68fc7b8bb14d5f4b55ee868590",
+  "prompts": {},
+  "sessions": {
+    "s_6d01f167f421a4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f019c4cdeffermzH53R0yp5I41",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "picada <david.picariello@pega.com>"
+    },
+    "s_d3741b0ebaea44": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_ef40d2e4cffe6799a1nMKR2VAt",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "picada <david.picariello@pega.com>"
+    }
+  }
+}
