@@ -1,0 +1,16 @@
+index.json
+  h_0228522ee653dc 262-263,267,273-274,278,284-285,289,295-296,300,306-307,311
+index.json.backup
+  h_0228522ee653dc 262-263,267,273-274,278,284-285,289,295-296,300,306-307,311
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "58d24803b9e75fcfe4376eb924265eb848dffa96",
+  "prompts": {},
+  "humans": {
+    "h_0228522ee653dc": {
+      "author": "picada_pega <david.picariello@pega.com>"
+    }
+  }
+}
