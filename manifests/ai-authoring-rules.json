@@ -6,6 +6,7 @@
     "25.1.0",
     "26.1.0",
     "26.1.1",
+    "26.1.2",
     "27.1.0"
   ],
   "artifacts": {
@@ -33,6 +34,12 @@
         "name": "genai-x.x.x-bundle-26.1.1.jar",
         "platforms": [
           "26.1.1"
+        ]
+      },
+      {
+        "name": "genai-x.x.x-bundle-26.1.2.jar",
+        "platforms": [
+          "26.1.2"
         ]
       },
       {
