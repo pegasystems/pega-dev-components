@@ -7,12 +7,12 @@
             "versions": [
                 {
                     "platformVersion": "23.1.0",
-                    "latestVersion": "0.2.22",
-                    "updateDate": "2026-10-23",
+                    "latestVersion": "0.2.23",
+                    "updateDate": "2026-11-04",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.22/blueprint-0.2.22-bundle.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.23/blueprint-0.2.23-bundle.jar?download="
                         }
                     ],
                     "documentation": [
@@ -48,12 +48,12 @@
                 },
                 {
                     "platformVersion": "24.1.0",
-                    "latestVersion": "0.2.22",
-                    "updateDate": "2026-10-23",
+                    "latestVersion": "0.2.23",
+                    "updateDate": "2026-11-04",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.22/blueprint-0.2.22-bundle.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.23/blueprint-0.2.23-bundle.jar?download="
                         }
                     ],
                     "documentation": [
@@ -89,12 +89,12 @@
                 },
                 {
                     "platformVersion": "24.2.0",
-                    "latestVersion": "0.2.22",
-                    "updateDate": "2026-10-23",
+                    "latestVersion": "0.2.23",
+                    "updateDate": "2026-11-04",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.22/blueprint-0.2.22-bundle.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.23/blueprint-0.2.23-bundle.jar?download="
                         }
                     ],
                     "documentation": [
@@ -130,12 +130,12 @@
                 },
                 {
                     "platformVersion": "25.1.0",
-                    "latestVersion": "0.2.22",
-                    "updateDate": "2026-10-23",
+                    "latestVersion": "0.2.23",
+                    "updateDate": "2026-11-04",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.22/blueprint-0.2.22-bundle-jakarta.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.23/blueprint-0.2.23-bundle-jakarta.jar?download="
                         }
                     ],
                     "documentation": [
@@ -171,12 +171,12 @@
                 },
                 {
                     "platformVersion": "26.1.0",
-                    "latestVersion": "0.2.22",
-                    "updateDate": "2026-10-23",
+                    "latestVersion": "0.2.23",
+                    "updateDate": "2026-11-04",
                     "binaries": [
                         {
                             "name": "MAIN",
-                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.22/blueprint-0.2.22-bundle-jakarta.jar?download="
+                            "url": "https://pegasystems.github.io/pega-dev-components/assets/components/platform-blueprint-component/0.2.23/blueprint-0.2.23-bundle-jakarta.jar?download="
                         }
                     ],
                     "documentation": [
