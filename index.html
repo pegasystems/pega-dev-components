@@ -255,7 +255,8 @@
                 const formattedDate = updateDate.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
-                    day: 'numeric'
+                    day: 'numeric',
+                    timeZone: 'UTC'
                 });
                 
                 // Generate binary download links (use first version in group)
